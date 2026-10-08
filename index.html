@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+
+<html>
+
+  <head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My CrazyGames Prototype</title>
+    <style>
+        /* Remove margens e garante que o jogo ocupe a tela inteira de forma limpa */
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #111;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Estilização do Canvas do Jogo */
+        #gameCanvas {
+	    padding: 0px;
+            background-color: #222;
+            box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.5);
+            /* Define um tamanho padrão responsivo */
+            max-width: 100%;
+            max-height: 100%;
+            aspect-ratio: 16 / 9; 
+        }
+    </style>
+    <!-- 1. IMPORTAÇÃO DO SDK DA CRAZYGAMES -->
+    <script src="https://sdk.crazygames.com/crazygames-sdk-v3.js"></script>
+  </head>
+
+  <body>
+
+    <canvas id="gameCanvas" width="800" height="450"></canvas>
+
+
+    <script type='module' src='./src/index.js'></script>
+  </body>
+
+</html>
