@@ -1,6 +1,10 @@
 import game_state from './game_state.js';
 
+const game_message = document.getElementById('game_message');
+
 function start_game () {
+
+    game_message.textContent = '';
 
     const standard_game_state = {
       game_running: true,

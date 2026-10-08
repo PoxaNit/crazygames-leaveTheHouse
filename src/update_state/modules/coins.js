@@ -1,5 +1,7 @@
 import game_state from '../../game_state/game_state.js';
 
+const game_message = document.getElementById('game_message');
+
 function coins () {
 
     let arrCopy = [...game_state.coins];
@@ -31,7 +33,13 @@ function coins () {
 
     if (collectedAny) game_state.coins = arrCopy;
 
-    if (!game_state.coins.length) game_state.game_running = false;
+    if (!game_state.coins.length) {
+
+	game_state.game_running = false;
+
+	game_message.textContent = 'Victory!';
+
+    }
 
 }
 

@@ -2,6 +2,9 @@ import input_state from '../../input/input_state/input_state.js';
 import game_state from '../../game_state/game_state.js';
 import move_entity from '../../systems/movement/move_entity.js';
 
+
+const game_message = document.getElementById('game_message');
+
 function monster () {
 /*
     if (input_state.p) {
@@ -74,7 +77,13 @@ function monster () {
 	game_state.monster.y < (game_state.player.y + game_state.player.height) &&
 	(game_state.monster.x + game_state.monster.width) > game_state.player.x &&
 	(game_state.monster.y + game_state.monster.height) > game_state.player.y
-    ) game_state.game_running = false;
+    ) {
+
+	game_state.game_running = false;
+
+	game_message.textContent = 'Game Over!';
+
+    };
 
 
 }
