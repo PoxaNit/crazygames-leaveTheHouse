@@ -47,7 +47,8 @@ function patrol_areas () {
                 x: patrol_area.x,
                 y: patrol_area.y,
                 width: patrol_area.width,
-                height: patrol_area.height
+                height: patrol_area.height,
+		next_move: {}
             };
         }
     }

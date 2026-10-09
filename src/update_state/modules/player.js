@@ -121,7 +121,8 @@ function player () {
           x: game_state.player.x,
           y: game_state.player.y,
 	  width: game_state.player.width,
-	  height: game_state.player.height
+	  height: game_state.player.height,
+	  next_move: {}
         }
 
     } else {
@@ -132,7 +133,8 @@ function player () {
             x: game_state.player.x,
             y: game_state.player.y,
 	    width: game_state.player.width,
-	    height: game_state.player.height
+	    height: game_state.player.height,
+	    next_move: {}
 	};
 
     }

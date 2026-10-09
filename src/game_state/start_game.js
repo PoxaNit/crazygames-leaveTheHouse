@@ -1,6 +1,9 @@
 import game_state from './game_state.js';
+import init_pathfinding from './init_pathfinding.js';
 
 const game_message = document.getElementById('game_message');
+
+const canvas = document.getElementById('gameCanvas');
 
 function start_game () {
 
@@ -12,6 +15,10 @@ function start_game () {
 	last_frame_time: performance.now(),
 	delta_time: 0,
 	patrol_timer: 0
+      },
+      pathfinding: {
+        nodeSize: 32, // Tamanho de cada célula do grid em pixels
+        grid: []      // Vai ser preenchido com a matriz de nós do mapa
       },
       player: {
         x: 0,
@@ -70,7 +77,13 @@ function start_game () {
 	  x: 0,
 	  y: 0,
 	  width: 0,
-	  height: 0
+	  height: 0,
+	  next_move: { // next area the monster has to go in order to get closer to the target area (final destiny)
+	    x: 0,
+	    y: 0,
+	    width: 0,
+	    height: 0
+	  }
 	},
         state: {
           action: 'walking',
@@ -136,6 +149,9 @@ function start_game () {
   };
 
     Object.assign(game_state, standard_game_state);
+
+    init_pathfinding(canvas.width, canvas.height);
+
 }
 
 export default start_game;
