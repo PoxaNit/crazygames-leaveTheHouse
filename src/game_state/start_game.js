@@ -8,22 +8,74 @@ function start_game () {
 
     const standard_game_state = {
       game_running: true,
+      time: {
+	last_frame_time: performance.now(),
+	delta_time: 0,
+	patrol_timer: 0
+      },
       player: {
         x: 0,
         y: 0,
         width: 50,
         height: 50,
-        velocity: 6
+	base_velocity: 2,
+        velocity: 2,
+	running_velocity: 6,
+	state: {
+	  action: 'standing',
+	  directions: []
+	}
       },
       monster: {
         x: 500,
         y: 200,
         width: 30,
         height: 30,
-        velocity: 4,
+	nase_velocity: 3,
+        velocity: 3,
+	running_velocity: 7,
+	patrol_areas: [
+	  {
+	    monster_is_in: false,
+	    x: 0,
+	    y: 0,
+	    width: 30,
+	    height: 30
+	  },
+	  {
+	    monster_is_in: false,
+	    x: 0,
+	    y: 420,
+	    width: 30,
+	    height: 30
+	  },
+	  {
+	    monster_is_in: false,
+	    x: 770,
+	    y: 0,
+	    width: 30,
+	    height: 30
+	  },
+	  {
+	    monster_is_in: false,
+	    x: 770,
+	    y: 420,
+	    width: 30,
+	    height: 30
+	  }
+	],
+	target_area: {
+	  active:  false,
+	  type: '',
+	  x: 0,
+	  y: 0,
+	  width: 0,
+	  height: 0
+	},
         state: {
           action: 'walking',
-          direction: null
+          direction: null,
+	  task: 'patrolling'
         }
       },
       coins: [
@@ -65,7 +117,22 @@ function start_game () {
           width: 45,
           height: 45
         }
-     ]
+      ],
+      bells: [
+	{
+	  x: 466,
+	  y: 200,
+	  width: 15,
+	  height: 15
+	}
+      ],
+      door: {
+	active: false,
+	x: 0,
+	y: 0,
+	width: 55,
+	height: 55
+      }
   };
 
     Object.assign(game_state, standard_game_state);

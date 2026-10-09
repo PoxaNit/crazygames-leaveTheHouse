@@ -35,9 +35,7 @@ function coins () {
 
     if (!game_state.coins.length) {
 
-	game_state.game_running = false;
-
-	game_message.textContent = 'Victory!';
+	game_state.door.active = true;
 
     }
 

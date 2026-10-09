@@ -1,76 +1,61 @@
 import input_state from '../../input/input_state/input_state.js';
 import game_state from '../../game_state/game_state.js';
 import move_entity from '../../systems/movement/move_entity.js';
-
+import entity_is_in_area from '../../systems/collisions/entity_is_in_area.js';
 
 const game_message = document.getElementById('game_message');
 
 function monster () {
-/*
-    if (input_state.p) {
 
-	game_state.monster.state.action = 'walking';
+    if (game_state.monster.target_area.active) {
 
-//	game_state.monster.state.direction = 'left';
+	let target_areaCenterX = game_state.monster.target_area.x + (game_state.monster.target_area.width / 2);
+	let target_areaCenterY = game_state.monster.target_area.y + (game_state.monster.target_area.height / 2);
 
-    } else {
+	let monsterCenterX = game_state.monster.x + (game_state.monster.width / 2);
+	let monsterCenterY = game_state.monster.y + (game_state.monster.height / 2);
 
-	game_state.monster.state.action = 'standing';
+	let pace = game_state.monster.velocity;
 
-	game_state.monster.state.direction = null;
+	if (game_state.monster.state.action === 'walking' || game_state.monster.state.action === 'running') {
 
-    }
-/*
-    if (game_state.monster.state.action === 'walking') {
+	    if (target_areaCenterX < monsterCenterX - pace) move_entity(game_state.monster, 'left');
 
-	switch (game_state.monster.state.direction) {
+	    else if (target_areaCenterX > monsterCenterX + pace) move_entity(game_state.monster, 'right');
 
-	    case 'left':
-		move_entity(game_state.monster, 'left');
-		break;
 
-	    case 'down':
-		move_entity(game_state.monster, 'down');
-		break;
+	    if (target_areaCenterY < monsterCenterY - pace) move_entity(game_state.monster, 'up');
+
+	    else if (target_areaCenterY > monsterCenterY + pace) move_entity(game_state.monster, 'down');
+
 	}
 
-    }
-*/
 
-
-    let playerCenterX = game_state.player.x + (game_state.player.width / 2);
-    let playerCenterY = game_state.player.y + (game_state.player.height / 2);
-
-    let monsterCenterX = game_state.monster.x + (game_state.monster.width / 2);
-    let monsterCenterY = game_state.monster.y + (game_state.monster.height / 2);
-
-    let pace = game_state.monster.velocity;
-
-    if (game_state.monster.state.action === 'walking') {
-
-	if (playerCenterX < monsterCenterX - pace) move_entity(game_state.monster, 'left');
-
-	else if (playerCenterX > monsterCenterX + pace) move_entity(game_state.monster, 'right');
-
-
-	if (playerCenterY < monsterCenterY - pace) move_entity(game_state.monster, 'up');
-
-	else if (playerCenterY > monsterCenterY + pace) move_entity(game_state.monster, 'down');
-
-
-/*
-	if (((game_state.player.x + (game_state.player.width / 2)) < game_state.monster.x)) move_entity(game_state.monster, 'left');
-
-	else if (((game_state.player.x + (game_state.player.width / 2)) > (game_state.monster.x + game_state.monster.width))) move_entity(game_state.monster, 'right');
-
-
-	if (((game_state.player.y + (game_state.player.height / 2)) < game_state.monster.y)) move_entity(game_state.monster, 'up');
-
-	else if (((game_state.player.y + (game_state.height / 2)) > (game_state.monster.y + game_state.monster.height))) move_entity(game_state.monster, 'down');
-*/
     }
 
 
+
+    if (game_state.monster.state.task === 'chasing' && game_state.monster.target_area.type === 'last_player_position') {
+
+        const x = game_state.monster.target_area.x;
+
+        const y = game_state.monster.target_area.y;
+
+        const w = game_state.monster.target_area.width;
+
+        const h = game_state.monster.target_area.height;
+
+        if (entity_is_in_area(game_state.monster, x, y, w, h)) {
+
+            game_state.monster.state.task = 'patrolling';
+
+            game_state.monster.target_area.active = false;
+
+	    game_state.time.patrol_timer = 0;
+
+        }
+
+    }
 
     if (
 	game_state.monster.x < (game_state.player.x + game_state.player.width) &&

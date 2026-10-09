@@ -3,7 +3,8 @@ let input_state = {
   up_arrow: false,
   right_arrow: false,
   down_arrow: false,
-  p: false
+  p: false,
+  r: false
 };
 
 export default input_state;

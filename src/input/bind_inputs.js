@@ -15,6 +15,9 @@ function bind_inputs () {
 
 	if (e.key === 'e' && !game_state.game_running) start_game(); // restarts the game when it's game over
 
+	if (e.key === 'r') {console.log('must run!'); input_state.r = true;}
+
+
     });
 
     document.addEventListener('keyup', e => {
@@ -25,6 +28,8 @@ function bind_inputs () {
 	if (e.key === 'ArrowRight' || e.key === 'Right') input_state.right_arrow = false;
 
 	if (e.key === 'p') input_state.p = false;
+
+	if (e.key === 'r') input_state.r = false;
 
     });
 
