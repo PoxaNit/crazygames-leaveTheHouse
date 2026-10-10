@@ -18,7 +18,7 @@ function is_there_obstacle_in_the_way (entity) {
         direction = entityCenterY > target_areaCenterY ? 'up' : 'down';
     }
 
-    return game_state.obstacles.some(ob => {
+    return game_state.obstacles.find(ob => {
         // Coordenadas e dimensões da caixa de projeção (túnel de visão)
         let areaX, areaY, areaWidth, areaHeight;
 

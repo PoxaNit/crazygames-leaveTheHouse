@@ -8,7 +8,6 @@ function move_entity (entity, direction) {
 
     let futureEntity = {...entity};
 
-
     if (direction === 'left') {
 
 	futureEntity.x -= entity.velocity;
@@ -17,13 +16,15 @@ function move_entity (entity, direction) {
 	if (canvas_collision(futureEntity)) {entity.x = 0;}
 
 
-	else if (!obstacles_collision(futureEntity)) {
-
+	else if (!obstacles_collision(futureEntity, 'left')) {
+console.log('no collision in left!')
 	    entity.x = futureEntity.x;
 
 	}
 
 	else {
+
+	    futureEntity.x -= futureEntity.velocity;
 
 	    let ob = get_collided_obstacle(futureEntity);
 
@@ -43,13 +44,15 @@ function move_entity (entity, direction) {
 	if (canvas_collision(futureEntity)) {entity.y = 0;}
 
 
-	else if (!obstacles_collision(futureEntity)) {
+	else if (!obstacles_collision(futureEntity, 'up')) {
 
 	    entity.y = futureEntity.y;
 
 	}
 
 	else {
+
+	    futureEntity.y -= futureEntity.velocity;
 
 	    let ob = get_collided_obstacle(futureEntity);
 
@@ -69,13 +72,15 @@ function move_entity (entity, direction) {
 	if (canvas_collision(futureEntity)) {entity.x = canvas.width - entity.width;}
 
 
-	else if (!obstacles_collision(futureEntity)) {
+	else if (!obstacles_collision(futureEntity, 'right')) {
 
 	    entity.x = futureEntity.x;
 
 	}
 
 	else {
+
+	    futureEntity.x += futureEntity.velocity;
 
 	    let ob = get_collided_obstacle(futureEntity);
 
@@ -95,13 +100,15 @@ function move_entity (entity, direction) {
 	if (canvas_collision(futureEntity)) {entity.y = canvas.height - entity.height;}
 
 
-	else if (!obstacles_collision(futureEntity)) {
+	else if (!obstacles_collision(futureEntity, 'down')) {
 
 	    entity.y = futureEntity.y;
 
 	}
 
 	else {
+
+	    futureEntity.y += futureEntity.velocity;
 
 	    let ob = get_collided_obstacle(futureEntity);
 
