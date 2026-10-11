@@ -31,7 +31,7 @@ function patrol_areas () {
 
 	game_state.time.patrol_timer += game_state.time.delta_time;
 
-	if (game_state.time.patrol_timer < 3.0) return;
+	if (game_state.time.patrol_timer < 1.0) return;
 
 
 

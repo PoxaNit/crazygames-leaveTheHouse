@@ -1,5 +1,6 @@
 import game_state from '../../game_state/game_state.js';
 import entity_is_in_area from './entity_is_in_area.js';
+import get_collided_obstacle from './get_collided_obstacle.js';
 
 function is_there_obstacle_in_the_way (entity) {
     if (!entity.target_area || !entity.target_area.active) return false;
@@ -18,11 +19,19 @@ function is_there_obstacle_in_the_way (entity) {
         direction = entityCenterY > target_areaCenterY ? 'up' : 'down';
     }
 
+
+    const collided_ob = get_collided_obstacle(entity);
+
+    if (collided_ob) {console.log('collided_ob: ', collided_ob);return true}
+
+
+
     return game_state.obstacles.find(ob => {
         // Coordenadas e dimensões da caixa de projeção (túnel de visão)
         let areaX, areaY, areaWidth, areaHeight;
 
         if (direction === 'left') {
+
             // O túnel começa no X do alvo e vai até o X da entidade. A altura é a da própria entidade.
             areaX = target_areaCenterX;
             areaY = entity.y;
@@ -31,6 +40,7 @@ function is_there_obstacle_in_the_way (entity) {
         }
 
         else if (direction === 'right') {
+
             // O túnel começa no limite direito da entidade e vai até o centro do alvo.
             areaX = entity.x + entity.width;
             areaY = entity.y;
@@ -39,6 +49,7 @@ function is_there_obstacle_in_the_way (entity) {
         }
 
         else if (direction === 'up') {
+
             // O túnel começa no Y do alvo e vai até o topo da entidade. A largura é a da própria entidade.
             areaX = entity.x;
             areaY = target_areaCenterY;
@@ -47,6 +58,7 @@ function is_there_obstacle_in_the_way (entity) {
         }
 
         else if (direction === 'down') {
+
             // O túnel começa na base da entidade e vai até o centro do alvo.
             areaX = entity.x;
             areaY = entity.y + entity.height;

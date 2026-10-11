@@ -28,6 +28,12 @@ function get_around_obstacle (entity) {
 
 	if (direction === 'left') {
 
+	    if (
+		!((entity.target_area.x + entity.target_area.width) <= obstacle.x) ||
+		((((entity.target_area.y + entity.target_area.height) <= obstacle.y) || (entity.target_area.y >= (obstacle.y + obstacle.height))) &&
+		(((entity.y + entity.height) <= obstacle.y) || (entity.y >= (obstacle.y + obstacle.height))))
+	    ) {console.log('fora do obstáculo: indo para esquerda');return null;}
+
 	    let up_side_pixels = 0;
 
 	    let down_side_pixels = 0;
@@ -66,6 +72,12 @@ function get_around_obstacle (entity) {
         }
 
         else if (direction === 'right') {
+
+	    if (
+		!(entity.target_area.x >= (obstacle.x + obstacle.width)) ||
+		((((entity.target_area.y + entity.target_area.height) <= obstacle.y) || (entity.target_area.y >= (obstacle.y + obstacle.height))) &&
+		(((entity.y + entity.height) <= obstacle.y) || (entity.y >= (obstacle.y + obstacle.height))))
+	    ) {console.log('fora do obstáculo: indo para direita');return null;}
 
 	    let up_side_pixels = 0;
 
@@ -107,6 +119,12 @@ function get_around_obstacle (entity) {
 
         else if (direction === 'up') {
 
+	    if (
+		!((entity.target_area.y + entity.target_area.height) <= obstacle.y) ||
+		((((entity.target_area.x + entity.target_area.width) <= obstacle.x) || (entity.target_area.x >= (obstacle.x + obstacle.width))) &&
+		(((entity.x + entity.width) <= obstacle.x) || (entity.x >= (obstacle.x + obstacle.width))))
+	    ) {console.log('fora do obstáculo: indo para cima');return null;}
+
 	    let left_side_pixels = 0;
 
 	    let right_side_pixels = 0;
@@ -146,6 +164,12 @@ function get_around_obstacle (entity) {
         }
 
         else if (direction === 'down') {
+
+	    if (
+		!(entity.target_area.y >= (obstacle.y + obstacle.height)) ||
+		((((entity.target_area.x + entity.target_area.width) <= obstacle.x) || (entity.target_area.x >= (obstacle.x + obstacle.width))) &&
+		(((entity.x + entity.width) <= obstacle.x) || (entity.x >= (obstacle.x + obstacle.width))))
+	    ) {console.log('fora do obstáculo: indo para baixo');return null;}
 
 	    let left_side_pixels = 0;
 

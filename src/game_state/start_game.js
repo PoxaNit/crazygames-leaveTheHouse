@@ -39,8 +39,15 @@ function start_game () {
         width: 30,
         height: 30,
 	nase_velocity: 3,
-        velocity: 3,
+        velocity: 10,
 	running_velocity: 7,
+	getting_around_obstacle: {
+	  active: false,
+	  left: false,
+	  right: false,
+	  up: false,
+	  down: false
+	},
 	patrol_areas: [
 	  {
 	    monster_is_in: false,
