@@ -17,7 +17,7 @@ function move_entity (entity, direction) {
 
 
 	else if (!obstacles_collision(futureEntity, 'left')) {
-console.log('no collision in left!')
+
 	    entity.x = futureEntity.x;
 
 	}
@@ -26,7 +26,7 @@ console.log('no collision in left!')
 
 	    futureEntity.x -= futureEntity.velocity;
 
-	    let ob = get_collided_obstacle(futureEntity);
+	    let ob = get_collided_obstacle(futureEntity, 'left');
 
 	    entity.x = ob.x + ob.width;
 
@@ -54,7 +54,7 @@ console.log('no collision in left!')
 
 	    futureEntity.y -= futureEntity.velocity;
 
-	    let ob = get_collided_obstacle(futureEntity);
+	    let ob = get_collided_obstacle(futureEntity, 'up');
 
 	    entity.y = ob.y + ob.height;
 
@@ -82,7 +82,7 @@ console.log('no collision in left!')
 
 	    futureEntity.x += futureEntity.velocity;
 
-	    let ob = get_collided_obstacle(futureEntity);
+	    let ob = get_collided_obstacle(futureEntity, 'right');
 
 	    entity.x = ob.x - entity.width;
 
@@ -110,7 +110,7 @@ console.log('no collision in left!')
 
 	    futureEntity.y += futureEntity.velocity;
 
-	    let ob = get_collided_obstacle(futureEntity);
+	    let ob = get_collided_obstacle(futureEntity, 'down');
 
 	    entity.y = ob.y - entity.height;
 

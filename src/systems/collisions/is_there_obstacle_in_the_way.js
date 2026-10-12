@@ -22,7 +22,7 @@ function is_there_obstacle_in_the_way (entity) {
 
     const collided_ob = get_collided_obstacle(entity);
 
-    if (collided_ob) {console.log('collided_ob: ', collided_ob);return true}
+    if (collided_ob) return collided_ob;
 
 
 

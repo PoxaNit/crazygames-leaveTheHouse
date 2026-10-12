@@ -1,5 +1,4 @@
 import game_state from './game_state.js';
-import init_pathfinding from './init_pathfinding.js';
 
 const game_message = document.getElementById('game_message');
 
@@ -15,10 +14,6 @@ function start_game () {
 	last_frame_time: performance.now(),
 	delta_time: 0,
 	patrol_timer: 0
-      },
-      pathfinding: {
-        nodeSize: 32, // Tamanho de cada célula do grid em pixels
-        grid: []      // Vai ser preenchido com a matriz de nós do mapa
       },
       player: {
         x: 0,
@@ -39,14 +34,15 @@ function start_game () {
         width: 30,
         height: 30,
 	nase_velocity: 3,
-        velocity: 10,
+        velocity: 4,
 	running_velocity: 7,
 	getting_around_obstacle: {
 	  active: false,
 	  left: false,
 	  right: false,
 	  up: false,
-	  down: false
+	  down: false,
+	  saved_direction: null
 	},
 	patrol_areas: [
 	  {
@@ -156,8 +152,6 @@ function start_game () {
   };
 
     Object.assign(game_state, standard_game_state);
-
-    init_pathfinding(canvas.width, canvas.height);
 
 }
 

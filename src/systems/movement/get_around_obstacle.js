@@ -18,21 +18,29 @@ function get_around_obstacle (entity) {
 	let direction;
 
 
-	if (Math.abs(entityCenterX - target_areaCenterX) > Math.abs(entityCenterY - target_areaCenterY)) {
-            direction = entityCenterX > target_areaCenterX ? 'left' : 'right';
+	if (entity.getting_around_obstacle.active && entity.getting_around_obstacle.saved_direction) {
+            direction = entity.getting_around_obstacle.saved_direction;
         } else {
-            direction = entityCenterY > target_areaCenterY ? 'up' : 'down';
+            // Só calcula uma nova direção do zero se ele NÃO estava desviando no frame anterior
+            if (Math.abs(entityCenterX - target_areaCenterX) > Math.abs(entityCenterY - target_areaCenterY)) {
+                direction = entityCenterX > target_areaCenterX ? 'left' : 'right';
+            } else {
+                direction = entityCenterY > target_areaCenterY ? 'up' : 'down';
+            }
+            // Salva para os próximos frames manterem a consistência
+            entity.getting_around_obstacle.saved_direction = direction;
         }
-
 
 
 	if (direction === 'left') {
 
+	    if (entity.getting_around_obstacle.active && entity.getting_around_obstacle.right) return null;
+
 	    if (
-		!((entity.target_area.x + entity.target_area.width) <= obstacle.x) ||
-		((((entity.target_area.y + entity.target_area.height) <= obstacle.y) || (entity.target_area.y >= (obstacle.y + obstacle.height))) &&
-		(((entity.y + entity.height) <= obstacle.y) || (entity.y >= (obstacle.y + obstacle.height))))
-	    ) {console.log('fora do obstáculo: indo para esquerda');return null;}
+		!(((entity.target_area.x) <= (obstacle.x + obstacle.width)) && (entity.x >= (obstacle.x + obstacle.width))) ||
+		((((entity.target_area.y + entity.target_area.height) <= obstacle.y) || (entity.target_area.y >= (obstacle.y + obstacle.height))) ||
+		(((entity.y + entity.height) <= obstacle.y - pace) || (entity.y >= (obstacle.y + obstacle.height + pace))))
+	    ) return null;
 
 	    let up_side_pixels = 0;
 
@@ -41,7 +49,7 @@ function get_around_obstacle (entity) {
 
 	    // getting up side pixels
 
-	    up_side_pixels += Math.max(0, (entity.x - (obstacle.x + obstacle.width))); // distance between enity and obstacle
+	    up_side_pixels += Math.max(0, (entity.x - (obstacle.x + obstacle.width))); // distance between entity and obstacle
 
 	    up_side_pixels += ((entity.y + entity.height) - obstacle.y); // distance between entity's down extreme and obstacles's up extreme
 
@@ -55,7 +63,7 @@ function get_around_obstacle (entity) {
 
 	    // getting down side pixels
 
-	    down_side_pixels += Math.max(0, entity.x - (obstacle.x + obstacle.width)); // distance between enity and obstacle
+	    down_side_pixels += Math.max(0, entity.x - (obstacle.x + obstacle.width)); // distance between entity and obstacle
 
 	    down_side_pixels += ((obstacle.y + obstacle.height) - entity.y); // distance between entity's up extreme and obstacles's down extreme
 
@@ -73,11 +81,14 @@ function get_around_obstacle (entity) {
 
         else if (direction === 'right') {
 
+	    if (entity.getting_around_obstacle.active && entity.getting_around_obstacle.left) return null;
+
 	    if (
-		!(entity.target_area.x >= (obstacle.x + obstacle.width)) ||
-		((((entity.target_area.y + entity.target_area.height) <= obstacle.y) || (entity.target_area.y >= (obstacle.y + obstacle.height))) &&
-		(((entity.y + entity.height) <= obstacle.y) || (entity.y >= (obstacle.y + obstacle.height))))
-	    ) {console.log('fora do obstáculo: indo para direita');return null;}
+		!((entity.target_area.x >= (obstacle.x + obstacle.width)) && ((entity.x + entity.width) <= obstacle.x)) ||
+		(((entity.target_area.y + entity.target_area.height) <= obstacle.y) || (entity.target_area.y >= (obstacle.y + obstacle.height))) ||
+		(((entity.y + entity.height) <= obstacle.y - pace) || (entity.y >= (obstacle.y + obstacle.height + pace)))
+	    ) return null;
+
 
 	    let up_side_pixels = 0;
 
@@ -86,7 +97,7 @@ function get_around_obstacle (entity) {
 
 	    // getting up side pixels
 
-	    up_side_pixels += Math.max(0, (obstacle.x - (entity.x + entity.width))); // distance between enity and obstacle
+	    up_side_pixels += Math.max(0, (obstacle.x - (entity.x + entity.width))); // distance between entity and obstacle
 
 	    up_side_pixels += ((entity.y + entity.height) - obstacle.y); // distance between entity's down extreme and obstacles's up extreme
 
@@ -100,7 +111,7 @@ function get_around_obstacle (entity) {
 
 	    // getting down side pixels
 
-	    down_side_pixels += Math.max(0, (obstacle.x - (entity.x + entity.width))); // distance between enity and obstacle
+	    down_side_pixels += Math.max(0, (obstacle.x - (entity.x + entity.width))); // distance between entity and obstacle
 
 	    down_side_pixels += ((obstacle.y + obstacle.height) - entity.y); // distance between entity's up extreme and obstacles's down extreme
 
@@ -119,11 +130,13 @@ function get_around_obstacle (entity) {
 
         else if (direction === 'up') {
 
+	    if (entity.getting_around_obstacle.active && entity.getting_around_obstacle.down) return null;
+
 	    if (
-		!((entity.target_area.y + entity.target_area.height) <= obstacle.y) ||
-		((((entity.target_area.x + entity.target_area.width) <= obstacle.x) || (entity.target_area.x >= (obstacle.x + obstacle.width))) &&
-		(((entity.x + entity.width) <= obstacle.x) || (entity.x >= (obstacle.x + obstacle.width))))
-	    ) {console.log('fora do obstáculo: indo para cima');return null;}
+		!(((entity.target_area.y + entity.target_area.height) <= obstacle.y) && (entity.y <= (obstacle.y + obstacle.height))) ||
+		((((entity.target_area.x + entity.target_area.width) <= obstacle.x) || (entity.target_area.x >= (obstacle.x + obstacle.width))) ||
+		(((entity.x + entity.width) <= obstacle.x - pace) || (entity.x >= (obstacle.x + obstacle.width + pace))))
+	    ) return null;
 
 	    let left_side_pixels = 0;
 
@@ -132,7 +145,7 @@ function get_around_obstacle (entity) {
 
 	    // getting left side pixels
 
-	    left_side_pixels += Math.max((entity.y - (obstacle.y + obstacle.height))); // distance between enity and obstacle
+	    left_side_pixels += Math.max(0, (entity.y - (obstacle.y + obstacle.height))); // distance between entity and obstacle
 
 	    left_side_pixels += ((entity.x + entity.width) - obstacle.x); // distance between entity's right extreme and obstacles's left extreme
 
@@ -146,7 +159,7 @@ function get_around_obstacle (entity) {
 
 	    // getting right side pixels
 
-	    right_side_pixels += Math.max(0, (entity.y - (obstacle.y + obstacle.height))); // distance between enity and obstacle
+	    right_side_pixels += Math.max(0, (entity.y - (obstacle.y + obstacle.height))); // distance between entity and obstacle
 
 	    right_side_pixels += ((obstacle.x + obstacle.width) - entity.x); // distance between entity's left extreme and obstacles's right extreme
 
@@ -165,11 +178,13 @@ function get_around_obstacle (entity) {
 
         else if (direction === 'down') {
 
+	    if (entity.getting_around_obstacle.active && entity.getting_around_obstacle.up) return null;
+
 	    if (
-		!(entity.target_area.y >= (obstacle.y + obstacle.height)) ||
-		((((entity.target_area.x + entity.target_area.width) <= obstacle.x) || (entity.target_area.x >= (obstacle.x + obstacle.width))) &&
-		(((entity.x + entity.width) <= obstacle.x) || (entity.x >= (obstacle.x + obstacle.width))))
-	    ) {console.log('fora do obstáculo: indo para baixo');return null;}
+		!(((entity.target_area.y >= (obstacle.y + obstacle.height)) && ((entity.y + entity.height) >= obstacle.y))) ||
+		((((entity.target_area.x + entity.target_area.width) <= obstacle.x) || (entity.target_area.x >= (obstacle.x + obstacle.width))) ||
+		(((entity.x + entity.width) <= obstacle.x - pace) || (entity.x >= (obstacle.x + obstacle.width + pace))))
+	    ) return null;
 
 	    let left_side_pixels = 0;
 
@@ -178,7 +193,7 @@ function get_around_obstacle (entity) {
 
 	    // getting left side pixels
 
-	    left_side_pixels += Math.max(0, (obstacle.y - (entity.y + entity.height))); // distance between enity and obstacle
+	    left_side_pixels += Math.max(0, (obstacle.y - (entity.y + entity.height))); // distance between entity and obstacle
 
 	    left_side_pixels += ((entity.x + entity.width) - obstacle.x); // distance between entity's right extreme and obstacles's left extreme
 
