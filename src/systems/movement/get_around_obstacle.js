@@ -18,17 +18,10 @@ function get_around_obstacle (entity) {
 	let direction;
 
 
-	if (entity.getting_around_obstacle.active && entity.getting_around_obstacle.saved_direction) {
-            direction = entity.getting_around_obstacle.saved_direction;
+        if (Math.abs(entityCenterX - target_areaCenterX) > Math.abs(entityCenterY - target_areaCenterY)) {
+            direction = entityCenterX > target_areaCenterX ? 'left' : 'right';
         } else {
-            // Só calcula uma nova direção do zero se ele NÃO estava desviando no frame anterior
-            if (Math.abs(entityCenterX - target_areaCenterX) > Math.abs(entityCenterY - target_areaCenterY)) {
-                direction = entityCenterX > target_areaCenterX ? 'left' : 'right';
-            } else {
-                direction = entityCenterY > target_areaCenterY ? 'up' : 'down';
-            }
-            // Salva para os próximos frames manterem a consistência
-            entity.getting_around_obstacle.saved_direction = direction;
+            direction = entityCenterY > target_areaCenterY ? 'up' : 'down';
         }
 
 
@@ -74,6 +67,14 @@ function get_around_obstacle (entity) {
 	    // absolute distance
 	    down_side_pixels += Math.abs((obstacle.y + obstacle.height) - target_areaCenterY);
 
+
+	    if (entity.getting_around_obstacle.active) {
+
+		if (entity.getting_around_obstacle.up) return (down_side_pixels + (pace * 2)) < up_side_pixels ? 'down' : 'up';
+
+		if (entity.getting_around_obstacle.down) return (up_side_pixels + (pace * 2)) < down_side_pixels ? 'up' : 'down';
+
+	    }
 
 	    return up_side_pixels > down_side_pixels ? 'down' : 'up';
 
@@ -123,6 +124,14 @@ function get_around_obstacle (entity) {
 	    down_side_pixels += Math.abs((obstacle.y + obstacle.height) - target_areaCenterY);
 
 
+	    if (entity.getting_around_obstacle.active) {
+
+		if (entity.getting_around_obstacle.up) return (down_side_pixels + (pace * 2)) < up_side_pixels ? 'down' : 'up';
+
+		if (entity.getting_around_obstacle.down) return (up_side_pixels + (pace * 2)) < down_side_pixels ? 'up' : 'down';
+
+	    }
+
 	    return up_side_pixels > down_side_pixels ? 'down' : 'up';
 
 
@@ -171,6 +180,14 @@ function get_around_obstacle (entity) {
 	    right_side_pixels += Math.abs((obstacle.x + obstacle.width) - target_areaCenterX);
 
 
+	    if (entity.getting_around_obstacle.active) {
+
+		if (entity.getting_around_obstacle.left) return (left_side_pixels + (pace * 2)) < right_side_pixels ? 'left' : 'right';
+
+		if (entity.getting_around_obstacle.right) return (right_side_pixels + (pace * 2)) < left_side_pixels ? 'right' : 'left';
+
+	    }
+
 	    return left_side_pixels > right_side_pixels ? 'right' : 'left';
 
 
@@ -218,6 +235,14 @@ function get_around_obstacle (entity) {
 	    // absolute distance
 	    right_side_pixels += Math.abs((obstacle.x + obstacle.width) - target_areaCenterX);
 
+
+	    if (entity.getting_around_obstacle.active) {
+
+		if (entity.getting_around_obstacle.left) return (left_side_pixels + (pace * 2)) < right_side_pixels ? 'left' : 'right';
+
+		if (entity.getting_around_obstacle.right) return (right_side_pixels + (pace * 2)) < left_side_pixels ? 'right' : 'left';
+
+	    }
 
 	    return left_side_pixels > right_side_pixels ? 'right' : 'left';
 

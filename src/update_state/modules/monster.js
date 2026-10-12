@@ -34,7 +34,7 @@ function monster () {
               up: false,
               down: false
 	    };
-/*
+
 	    if (recommended_direction) {
 		game_state.monster.getting_around_obstacle.active = true;
 
@@ -72,18 +72,12 @@ function monster () {
 		}
 
 	    } else {
-		game_state.monster.getting_around_obstacle = {
-		  active: false,
-        	  left: false,
-        	  right: false,
-        	  up: false,
-        	  down: false,
-        	  saved_direction: null
-    	    };
 
-	}
+		game_state.monster.getting_around_obstacle.active = false;
+                game_state.monster.getting_around_obstacle.saved_direction = null;
+	    }
 
-*/
+
 	    if (target_areaCenterX < monsterCenterX - pace) { //console.log('movimentação natural: left')
 		if (!game_state.monster.getting_around_obstacle.right) move_entity(game_state.monster, 'left');
 

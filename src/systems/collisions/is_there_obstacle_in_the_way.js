@@ -12,13 +12,17 @@ function is_there_obstacle_in_the_way (entity) {
 
     let direction;
 
-    // Determina a direção principal do movimento olhando para os centros
-    if (Math.abs(entityCenterX - target_areaCenterX) > Math.abs(entityCenterY - target_areaCenterY)) {
-        direction = entityCenterX > target_areaCenterX ? 'left' : 'right';
+    if (entity.getting_around_obstacle && entity.getting_around_obstacle.active && entity.getting_around_obstacle.saved_direction) {
+        direction = entity.getting_around_obstacle.saved_direction;
     } else {
-        direction = entityCenterY > target_areaCenterY ? 'up' : 'down';
-    }
+    // Determina a direção principal do movimento olhando para os centros
+        if (Math.abs(entityCenterX - target_areaCenterX) > Math.abs(entityCenterY - target_areaCenterY)) {
+            direction = entityCenterX > target_areaCenterX ? 'left' : 'right';
+        } else {
+            direction = entityCenterY > target_areaCenterY ? 'up' : 'down';
+        }
 
+    }
 
     const collided_ob = get_collided_obstacle(entity);
 
@@ -34,35 +38,35 @@ function is_there_obstacle_in_the_way (entity) {
 
             // O túnel começa no X do alvo e vai até o X da entidade. A altura é a da própria entidade.
             areaX = target_areaCenterX;
-            areaY = entity.y;
+            areaY = entity.y - entity.velocity;
             areaWidth = entity.x - target_areaCenterX;
-            areaHeight = entity.height;
+            areaHeight = entity.height + (entity.velocity * 2);
         }
 
         else if (direction === 'right') {
 
             // O túnel começa no limite direito da entidade e vai até o centro do alvo.
             areaX = entity.x + entity.width;
-            areaY = entity.y;
+            areaY = entity.y - entity.velocity;
             areaWidth = target_areaCenterX - areaX;
-            areaHeight = entity.height;
+            areaHeight = entity.height + (entity.velocity * 2);
         }
 
         else if (direction === 'up') {
 
             // O túnel começa no Y do alvo e vai até o topo da entidade. A largura é a da própria entidade.
-            areaX = entity.x;
+            areaX = entity.x - entity.velocity;
             areaY = target_areaCenterY;
-            areaWidth = entity.width;
+            areaWidth = entity.width + (entity.velocity * 2);
             areaHeight = entity.y - target_areaCenterY;
         }
 
         else if (direction === 'down') {
 
             // O túnel começa na base da entidade e vai até o centro do alvo.
-            areaX = entity.x;
+            areaX = entity.x - entity.velocity;
             areaY = entity.y + entity.height;
-            areaWidth = entity.width;
+            areaWidth = entity.width + (entity.velocity * 2);
             areaHeight = target_areaCenterY - areaY;
         }
 
