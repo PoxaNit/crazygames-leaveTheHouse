@@ -42,7 +42,13 @@ function start_game () {
 	  right: false,
 	  up: false,
 	  down: false,
-	  saved_direction: null
+	  saved_direction: null,
+	  obstacle: {
+	    x: null,
+	    y: null,
+	    width: null,
+	    height: null,
+	  }
 	},
 	patrol_areas: [
 	  {
