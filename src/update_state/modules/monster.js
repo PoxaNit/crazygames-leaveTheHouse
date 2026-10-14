@@ -27,7 +27,7 @@ function monster () {
 	if (game_state.monster.state.action === 'walking' || game_state.monster.state.action === 'running') {
 
 	    const recommended_direction = get_around_obstacle(game_state.monster);
-
+console.log('recommended_direction aós const =: ', recommended_direction)
 	    const current_obstacle = is_there_obstacle_in_the_way(game_state.monster);
 
 	    if (current_obstacle) game_state.monster.getting_around_obstacle.obstacle = current_obstacle;
@@ -42,8 +42,6 @@ function monster () {
 	    if (recommended_direction) {
 
 		game_state.monster.getting_around_obstacle.active = true;
-
-//		game_state.monster.getting_around_obstacle.saved_direction = true;
 
 		if (recommended_direction === 'left') {console.log('movimentação recomendada: left')
 
@@ -90,19 +88,14 @@ function monster () {
 
 		if (game_state.monster.getting_around_obstacle.active) { console.log('else > if > obstacle.active. saved: ', game_state.monster.getting_around_obstacle.saved_direction)
 
-		    if (game_state.monster.getting_around_obstacle.saved_direction === 'up') game_state.monster.getting_around_obstacle.up = true;
-
-		    else if (game_state.monster.getting_around_obstacle.saved_direction === 'down') game_state.monster.getting_around_obstacle.down = true;
-
-
-		    const target_directions = target_area_directions(game_state.monster);
+		    const target_directions = target_area_directions(game_state.monster); // directions the taret area is in relation to the monster
 
 		    const curr_ob = game_state.monster.getting_around_obstacle.obstacle;
-
-
+		    game_state.monster.getting_around_obstacle.saved_direction = null;
+console.log('target_directions: ', target_directions)
 		    if (target_directions.includes('left')) {
 
-			if (game_state.monster.x <= (curr_ob.x + curr_ob.width)) {
+			if ((game_state.monster.x < (curr_ob.x + curr_ob.width)) && (monsterCenterX > (curr_ob.x + curr_ob.width)) && ((game_state.monster.target_area.x + game_state.monster.target_area.width) <= curr_ob.x)) {
 
 			    game_state.monster.getting_around_obstacle.active = false;
 
@@ -118,8 +111,8 @@ function monster () {
 
 		    else if (target_directions.includes('right')) {
 
-			if ((game_state.monster.x + game_state.monster.width) >= curr_ob.x) {
-
+			if (((game_state.monster.x + game_state.monster.width) > curr_ob.x) && (monsterCenterX < curr_ob.x) && (game_state.monster.target_area.x >= (curr_ob.x + curr_ob.width))) {
+console.log('includes right executando...')
 			    game_state.monster.getting_around_obstacle.active = false;
 
 			    game_state.monster.getting_around_obstacle.up = false;
@@ -134,8 +127,9 @@ function monster () {
 
 
 		    if (target_directions.includes('up')) {
+console.log('includes up executando...')
 
-			if (game_state.monster.y <= (curr_ob.y + curr_ob.height)) {
+			if ((game_state.monster.y < (curr_ob.y + curr_ob.height)) && (monsterCenterY > (curr_ob.y + curr_ob.height)) && ((game_state.monster.target_area.y + game_state.monster.target_area.height) <= curr_ob.y)) {
 
 			    game_state.monster.getting_around_obstacle.active = false;
 
@@ -151,8 +145,8 @@ function monster () {
 
 		    else if (target_directions.includes('down')) {
 
-			if ((game_state.monster.y + game_state.monster.height) >= curr_ob.y) {
-
+			if (((game_state.monster.y + game_state.monster.height) > curr_ob.y) && (monsterCenterY < curr_ob.y) && (game_state.monster.target_area.y >= (curr_ob.y + curr_ob.height))) {
+console.log('passou do topo da parede')
 			    game_state.monster.getting_around_obstacle.active = false;
 
 			    game_state.monster.getting_around_obstacle.up = false;
@@ -183,15 +177,28 @@ function monster () {
 
 
 
-	    if (target_areaCenterX < monsterCenterX - pace) { //console.log('movimentação natural: left')
+	    if (target_areaCenterX < monsterCenterX - pace) {
 
-		if (!(game_state.monster.getting_around_obstacle.active && game_state.monster.getting_around_obstacle.saved_direction === 'right')) move_entity(game_state.monster, 'left');
+		if (!(game_state.monster.getting_around_obstacle.active && game_state.monster.getting_around_obstacle.saved_direction === 'right')){
+
+console.log('movimentação natural: left')
+console.log('saved_direction: ', game_state.monster.getting_around_obstacle.saved_direction)
+
+		    move_entity(game_state.monster, 'left');
+
+		}
 
 	    }
 
-	    else if (target_areaCenterX > monsterCenterX + pace) { //console.log('movimentação natural: right')
+	    else if (target_areaCenterX > monsterCenterX + pace) {
 
-		if (!(game_state.monster.getting_around_obstacle.active && game_state.monster.getting_around_obstacle.saved_direction === 'left')) move_entity(game_state.monster, 'right');
+		if (!(game_state.monster.getting_around_obstacle.active && game_state.monster.getting_around_obstacle.saved_direction === 'left')) {
+console.log('movimentação natural: right')
+console.log('saved_direction: ', game_state.monster.getting_around_obstacle.saved_direction)
+
+		    move_entity(game_state.monster, 'right');
+
+		}
 
 	    }
 
@@ -210,10 +217,10 @@ console.log('saved_direction: ', game_state.monster.getting_around_obstacle.save
 	    }
 
 	    else if (target_areaCenterY > monsterCenterY + pace) {
+console.log('movimentação natural: down')
+console.log('saved_direction: ', game_state.monster.getting_around_obstacle.saved_direction)
 
 		if (!(game_state.monster.getting_around_obstacle.active && game_state.monster.getting_around_obstacle.saved_direction === 'up')) {
-//console.log('movimentação natural: down')
-//console.log('saved_direction: ', game_state.monster.getting_around_obstacle.saved_direction)
 
 			move_entity(game_state.monster, 'down');
 

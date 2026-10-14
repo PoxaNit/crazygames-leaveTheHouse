@@ -6,7 +6,7 @@ function get_around_obstacle (entity) {
     const obstacle = is_there_obstacle_in_the_way(entity);
 
     if (obstacle) {
-
+console.log('inside obstacle: ', obstacle)
 	let target_areaCenterX = entity.target_area.x + (entity.target_area.width / 2);
         let target_areaCenterY = entity.target_area.y + (entity.target_area.height / 2);
 
@@ -18,12 +18,19 @@ function get_around_obstacle (entity) {
 	let direction;
 
 
+
+	// defining the direction the target area is in relation to the entity
+
         if (Math.abs(entityCenterX - target_areaCenterX) > Math.abs(entityCenterY - target_areaCenterY)) {
             direction = entityCenterX > target_areaCenterX ? 'left' : 'right';
         } else {
             direction = entityCenterY > target_areaCenterY ? 'up' : 'down';
         }
 
+
+
+
+	// rules for each direction
 
 	if (direction === 'left') {
 
