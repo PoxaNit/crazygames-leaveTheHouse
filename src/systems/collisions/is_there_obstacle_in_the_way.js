@@ -6,6 +6,12 @@ import target_area_directions from '../../systems/movement/target_area_direction
 function is_there_obstacle_in_the_way (entity) {
     if (!entity.target_area || !entity.target_area.active) return false;
 
+    if (entity.getting_around_obstacle.active && entity.getting_around_obstacle.obstacle) {
+//console.log('já tem obstacle gravado: ', entity.getting_around_obstacle.obstacle)
+	return entity.getting_around_obstacle.obstacle;
+    }
+
+//console.log('is_there... executando...')
     let entityCenterX = entity.x + (entity.width / 2);
     let entityCenterY = entity.y + (entity.height / 2);
     let target_areaCenterX = entity.target_area.x + (entity.target_area.width / 2);
@@ -17,14 +23,14 @@ function is_there_obstacle_in_the_way (entity) {
     const collided_ob = get_collided_obstacle(entity);
 
     if (collided_ob) {
-
+//console.log('debtro do bloco collided_ob')
         if (directions.includes('left')) {
 
 	    if (((((entity.y + entity.height) <= collided_ob.y) || (entity.y >= (collided_ob.y + collided_ob.height)))) && ((entity.target_area.x + entity.target_area.width) <= collided_ob.x)) return null;
 
         }
 
-        else if (directions.includes('right')) {console.log('dentro de right')
+        else if (directions.includes('right')) { //console.log('dentro de right')
 	    if ((((entity.y + entity.height) <= collided_ob.y) || (entity.y >= (collided_ob.y + collided_ob.height))) && (entity.target_area.x >= (collided_ob.x + collided_ob.width)))
 		return null;
 
@@ -40,6 +46,7 @@ function is_there_obstacle_in_the_way (entity) {
 
         }
 
+	entity.getting_around_obstacle.obstacle = collided_ob;
 
 	return collided_ob;
 
@@ -75,7 +82,13 @@ function is_there_obstacle_in_the_way (entity) {
         // Testa se o obstáculo intercepta este túnel dimensionado com o tamanho do monstro
         let  result = entity_is_in_area({ x: areaX, y: areaY, width: areaWidth, height: areaHeight }, ob.x, ob.y, ob.width, ob.height);
 
-	if (result) return result;
+	if (result) {
+
+	    entity.getting_around_obstacle.obstacle = result;
+
+	    return result;
+
+	}
 
         if (directions.includes('up')) {
 
@@ -101,7 +114,13 @@ function is_there_obstacle_in_the_way (entity) {
 
         result = entity_is_in_area({ x: areaX, y: areaY, width: areaWidth, height: areaHeight }, ob.x, ob.y, ob.width, ob.height);
 
-	if (result) return result;
+	if (result) {
+
+	    entity.getting_around_obstacle.obstacle = result;
+
+	    return result;
+
+	}
 
 	return false;
 

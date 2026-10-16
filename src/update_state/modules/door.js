@@ -1,6 +1,4 @@
-import input_state from '../../input/input_state/input_state.js';
 import game_state from '../../game_state/game_state.js';
-import move_entity from '../../systems/movement/move_entity.js';
 
 
 const game_message = document.getElementById('game_message');

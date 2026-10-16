@@ -29,12 +29,12 @@ function start_game () {
 	}
       },
       monster: {
-        x: 500,
-        y: 200,
+        x: 600,
+        y: 260,
         width: 30,
         height: 30,
-	nase_velocity: 3,
-        velocity: 7,
+	base_velocity: 3,
+        velocity: 4,
 	running_velocity: 7,
 	getting_around_obstacle: {
 	  active: false,

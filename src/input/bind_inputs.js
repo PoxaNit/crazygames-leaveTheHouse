@@ -15,7 +15,7 @@ function bind_inputs () {
 
 	if (e.key === 'e' && !game_state.game_running) start_game(); // restarts the game when it's game over
 
-	if (e.key === 'r') {console.log('must run!'); input_state.r = true;}
+	if (e.key === 'r') input_state.r = true;
 
 
     });
