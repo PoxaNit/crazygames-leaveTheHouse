@@ -34,7 +34,7 @@ function start_game () {
         width: 30,
         height: 30,
 	base_velocity: 3,
-        velocity: 4,
+        velocity: 3,
 	running_velocity: 7,
 	getting_around_obstacle: {
 	  active: false,

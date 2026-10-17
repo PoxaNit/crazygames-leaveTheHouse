@@ -19,22 +19,42 @@ function is_there_obstacle_in_the_way (entity) {
     const collided_ob = get_collided_obstacle(entity);
 
     if (collided_ob) {
-console.log('debtro do bloco collided_ob')
+
+//console.log('debtro do bloco collided_ob')
         if (directions.includes('left')) { //console.log('dentro de left')
 
-	    if (((((entity.y + entity.height) <= collided_ob.y) || (entity.y >= (collided_ob.y + collided_ob.height)))) && ((entity.target_area.x + entity.target_area.width) <= collided_ob.x)) return null;
+	    if (
+		((((entity.y + entity.height) <= collided_ob.y) || (entity.y >= (collided_ob.y + collided_ob.height)))) &&
+		((entity.target_area.x + entity.target_area.width) <= collided_ob.x) &&
+		((entity.x >= (collided_ob.x + collided_ob.width)) && ((entity.target_area.x + entity.target_area.width) <= collided_ob.x))
+	       )
+	    {
 
+		return null;
+
+	    }
         }
 
         else if (directions.includes('right')) { //console.log('dentro de right')
-	    if ((((entity.y + entity.height) <= collided_ob.y) || (entity.y >= (collided_ob.y + collided_ob.height))) && (entity.target_area.x >= (collided_ob.x + collided_ob.width)))
+	    if (
+		(((entity.y + entity.height) <= collided_ob.y) || (entity.y >= (collided_ob.y + collided_ob.height))) &&
+		(entity.target_area.x >= (collided_ob.x + collided_ob.width)) &&
+		((entity.target_area.x >= (collided_ob.x + collided_ob.width)) && ((entity.x + entity.target_area.width) <= collided_ob.x))
+	       )
+	    {
 		return null;
+	    }
 
         }
 
         if (directions.includes('up')) {
-	    if ((((entity.x + entity.width) <= collided_ob.x) || (entity.x >= (collided_ob.x + collided_ob.width))) && ((entity.target_area.y + entity.target_area.height) <= collided_ob.y)) {
-console.log('dentro de up')
+	    if (
+		(((entity.x + entity.width) <= collided_ob.x) || (entity.x >= (collided_ob.x + collided_ob.width))) &&
+		((entity.target_area.y + entity.target_area.height) <= collided_ob.y) &&
+		((entity.y >= (collided_ob.y + collided_ob.height)) && ((entity.target_area.y + entity.target_area.height) <= collided_ob.y))
+	       )
+	    {
+//console.log('dentro de up')
 		return null;
 
 	    }
@@ -42,9 +62,19 @@ console.log('dentro de up')
         }
 
         else if (directions.includes('down')) { //console.log('dentro de right')
-	    if ((((entity.x + entity.width) <= collided_ob.x) || (entity.x >= (collided_ob.x + collided_ob.width))) && (entity.target_area.y >= (collided_ob.y + collided_ob.height))) return null;
+	    if (
+		(((entity.x + entity.width) <= collided_ob.x) || (entity.x >= (collided_ob.x + collided_ob.width))) &&
+		(entity.target_area.y >= (collided_ob.y + collided_ob.height)) &&
+		((entity.target_area.y >= (collided_ob.y + collided_ob.height)) && ((entity.y + entity.target_area.height) <= collided_ob.y))
+	       )
+	    {
+
+		    return null;
+
+	    }
 
         }
+
 
 	entity.getting_around_obstacle.obstacle = collided_ob;
 
@@ -53,12 +83,12 @@ console.log('dentro de up')
     }
 
     if (entity.getting_around_obstacle.active && entity.getting_around_obstacle.obstacle) {
-console.log('já tem obstacle gravado: ', entity.getting_around_obstacle.obstacle)
+//console.log('já tem obstacle gravado: ', entity.getting_around_obstacle.obstacle)
 	return entity.getting_around_obstacle.obstacle;
     }
 
 
-    return game_state.obstacles.filter(ob => {
+    const obstacles = game_state.obstacles.filter(ob => {
         // Coordenadas e dimensões da caixa de projeção (túnel de visão)
         let areaX, areaY, areaWidth, areaHeight;
 

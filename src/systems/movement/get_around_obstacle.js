@@ -32,7 +32,7 @@ function get_around_obstacle (entity) {
 		!(((entity.y + entity.height) <= obstacle.y - pace) || (entity.y >= (obstacle.y + obstacle.height + pace))))
 	    ) {
 
-console.log('em get_around_obstacle > left bloco');
+//console.log('em get_around_obstacle > left bloco');
 
 	        let up_side_pixels = 0;
 
@@ -131,7 +131,7 @@ console.log('em get_around_obstacle > left bloco');
 	    ) {
 
 //console.log('em get_around_obstacle > up bloco, segundo bloco if deu true: retornando null');return null;
-console.log('em get_around_obstacle > up bloco');
+//console.log('em get_around_obstacle > up bloco');
 
 	        let left_side_pixels = 0;
 
@@ -181,7 +181,7 @@ console.log('em get_around_obstacle > up bloco');
 		!((((entity.target_area.x + entity.target_area.width) <= obstacle.x) || (entity.target_area.x >= (obstacle.x + obstacle.width))) && // rvisar: parênteses
 		!(((entity.x + entity.width) <= obstacle.x - pace) || (entity.x >= (obstacle.x + obstacle.width + pace))))
 	    ) {
-console.log('em get_around_obstacle > down bloco');
+//console.log('em get_around_obstacle > down bloco');
 //console.log('executando bloco down, get_around_obstacle')
 //console.log('!(((entity.x + entity.width) <= obstacle.x - pace) || (entity.x >= (obstacle.x + obstacle.width + pace)))):',!(((entity.x + entity.width) <= obstacle.x - pace) || (entity.x >= (obstacle.x + obstacle.width + pace))))
 //console.log('((entity.target_area.y >= (obstacle.y + obstacle.height)) && ((entity.y + entity.height) <= obstacle.y)) (base do monster não passou do topo da parede):', ((entity.target_area.y >= (obstacle.y + obstacle.height)) && ((entity.y + entity.height) <= obstacle.y)))
