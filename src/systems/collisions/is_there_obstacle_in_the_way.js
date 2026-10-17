@@ -6,10 +6,6 @@ import target_area_directions from '../../systems/movement/target_area_direction
 function is_there_obstacle_in_the_way (entity) {
     if (!entity.target_area || !entity.target_area.active) return false;
 
-    if (entity.getting_around_obstacle.active && entity.getting_around_obstacle.obstacle) {
-//console.log('já tem obstacle gravado: ', entity.getting_around_obstacle.obstacle)
-	return entity.getting_around_obstacle.obstacle;
-    }
 
 //console.log('is_there... executando...')
     let entityCenterX = entity.x + (entity.width / 2);
@@ -23,8 +19,8 @@ function is_there_obstacle_in_the_way (entity) {
     const collided_ob = get_collided_obstacle(entity);
 
     if (collided_ob) {
-//console.log('debtro do bloco collided_ob')
-        if (directions.includes('left')) {
+console.log('debtro do bloco collided_ob')
+        if (directions.includes('left')) { //console.log('dentro de left')
 
 	    if (((((entity.y + entity.height) <= collided_ob.y) || (entity.y >= (collided_ob.y + collided_ob.height)))) && ((entity.target_area.x + entity.target_area.width) <= collided_ob.x)) return null;
 
@@ -37,11 +33,15 @@ function is_there_obstacle_in_the_way (entity) {
         }
 
         if (directions.includes('up')) {
-	    if ((((entity.x + entity.width) <= collided_ob.x) || (entity.x >= (collided_ob.x + collided_ob.width))) && ((entity.target_area.y + entity.target_area.height) <= collided_ob.y)) return null;
+	    if ((((entity.x + entity.width) <= collided_ob.x) || (entity.x >= (collided_ob.x + collided_ob.width))) && ((entity.target_area.y + entity.target_area.height) <= collided_ob.y)) {
+console.log('dentro de up')
+		return null;
+
+	    }
 
         }
 
-        else if (directions.includes('down')) {
+        else if (directions.includes('down')) { //console.log('dentro de right')
 	    if ((((entity.x + entity.width) <= collided_ob.x) || (entity.x >= (collided_ob.x + collided_ob.width))) && (entity.target_area.y >= (collided_ob.y + collided_ob.height))) return null;
 
         }
@@ -52,8 +52,13 @@ function is_there_obstacle_in_the_way (entity) {
 
     }
 
+    if (entity.getting_around_obstacle.active && entity.getting_around_obstacle.obstacle) {
+console.log('já tem obstacle gravado: ', entity.getting_around_obstacle.obstacle)
+	return entity.getting_around_obstacle.obstacle;
+    }
 
-    return game_state.obstacles.find(ob => {
+
+    return game_state.obstacles.filter(ob => {
         // Coordenadas e dimensões da caixa de projeção (túnel de visão)
         let areaX, areaY, areaWidth, areaHeight;
 
@@ -125,6 +130,34 @@ function is_there_obstacle_in_the_way (entity) {
 	return false;
 
     });
+
+// 1. Se a sua lista filtrada achou paredes no túnel de visão:
+if (obstacles.length > 0) {
+
+    const obstaculo_mais_proximo = obstacles.reduce((mais_perto, ob_atual) => {
+        
+        // Calcula a distância do centro do monstro até o centro da parede avaliada agora
+        let centroObAtualX = ob_atual.x + (ob_atual.width / 2);
+        let centroObAtualY = ob_atual.y + (ob_atual.height / 2);
+        
+        // Calcula a distância do centro do monstro até o centro do obstáculo que estava ganhando
+        let centroMaisPertoX = mais_perto.x + (mais_perto.width / 2);
+        let centroMaisPertoY = mais_perto.y + (mais_perto.height / 2);
+
+        // Teorema de Pitágoras (Math.hypot) para calcular a distância linear real em pixels
+        let dist_atual = Math.hypot(entityCenterX - centroObAtualX, entityCenterY - centroObAtualY);
+        let dist_mais_perto = Math.hypot(entityCenterX - centroMaisPertoX, entityCenterY - centroMaisPertoY);
+
+        // Se a distância da parede atual for menor, ela vira a nova campeã. Se não, mantém a anterior.
+        return dist_atual < dist_mais_perto ? ob_atual : mais_perto;
+    });
+
+    // Registra o vencedor de proximidade no estado e retorna ele para o desvio!
+    entity.getting_around_obstacle.obstacle = obstaculo_mais_proximo;
+    return obstaculo_mais_proximo;
+}
+
+
 }
 
 export default is_there_obstacle_in_the_way;

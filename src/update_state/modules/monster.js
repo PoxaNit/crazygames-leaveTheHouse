@@ -32,7 +32,7 @@ function monster () {
 	    game_state.monster.getting_around_obstacle.down = false;
 
 	    const recommended_direction = get_around_obstacle(game_state.monster); // verificar se o módulo está retornando o valor gravado
-//console.log('recommended_direction aós const =: ', recommended_direction)
+console.log('recommended_direction aós const =: ', recommended_direction)
 	    const current_obstacle = is_there_obstacle_in_the_way(game_state.monster);
 
 	    if (current_obstacle) game_state.monster.getting_around_obstacle.obstacle = current_obstacle;
@@ -95,10 +95,24 @@ function monster () {
 		    const curr_ob = game_state.monster.getting_around_obstacle.obstacle;
 //		    game_state.monster.getting_around_obstacle.saved_direction = null;
 //console.log('target_directions: ', target_directions)
-
+console.log('curr_ob:', curr_ob)
 //    para testar depois: if (curr_ob)
 
+
 		    if (curr_ob) {
+
+/*
+			    game_state.monster.getting_around_obstacle.active = false;
+
+			    game_state.monster.getting_around_obstacle.up = false;
+
+			    game_state.monster.getting_around_obstacle.down = false;
+
+                	    game_state.monster.getting_around_obstacle.saved_direction = null;
+
+			    game_state.monster.getting_around_obstacle.obstacle = null;
+
+*/
 
 		    if (target_directions.includes('left')) {
 
@@ -112,13 +126,14 @@ function monster () {
 
                 	    game_state.monster.getting_around_obstacle.saved_direction = null;
 
-			}
-
-			if (((game_state.monster.y >= (curr_ob.y + curr_ob.height)) || ((game_state.monster.y + game_state.monster.height) <= curr_ob.y)) && ((game_state.monster.target_area.x + game_state.monster.target_area.width) <= curr_ob.x)) {
-
 			    game_state.monster.getting_around_obstacle.obstacle = null;
 
 			}
+
+//			if (((game_state.monster.y >= (curr_ob.y + curr_ob.height)) || ((game_state.monster.y + game_state.monster.height) <= curr_ob.y)) && ((game_state.monster.target_area.x + game_state.monster.target_area.width) <= curr_ob.x)) {
+
+
+//			}
 
 		    }
 
@@ -136,13 +151,14 @@ function monster () {
 
                 	    game_state.monster.getting_around_obstacle.obstacle = null;
 
-			}
-
-			if (((game_state.monster.y >= (curr_ob.y + curr_ob.height)) || ((game_state.monster.y + game_state.monster.height) <= curr_ob.y)) && (game_state.monster.target_area.x >= (curr_ob.x + curr_ob.width))) {
-
 			    game_state.monster.getting_around_obstacle.obstacle = null;
 
 			}
+
+//			if (((game_state.monster.y >= (curr_ob.y + curr_ob.height)) || ((game_state.monster.y + game_state.monster.height) <= curr_ob.y)) && (game_state.monster.target_area.x >= (curr_ob.x + curr_ob.width))) {
+
+
+//			}
 
 		    }
 
@@ -160,13 +176,14 @@ function monster () {
 
                 	    game_state.monster.getting_around_obstacle.saved_direction = null;
 
-			}
-
-			if (((game_state.monster.x >= (curr_ob.x + curr_ob.width)) || ((game_state.monster.x + game_state.monster.width) <= curr_ob.x)) && ((game_state.monster.target_area.y + game_state.monster.target_area.height) <= curr_ob.y)) {
-
 			    game_state.monster.getting_around_obstacle.obstacle = null;
 
 			}
+
+//			if (((game_state.monster.x >= (curr_ob.x + curr_ob.width)) || ((game_state.monster.x + game_state.monster.width) <= curr_ob.x)) && ((game_state.monster.target_area.y + game_state.monster.target_area.height) <= curr_ob.y)) {
+
+
+//			}
 
 		    }
 
@@ -182,21 +199,39 @@ function monster () {
 
                 	    game_state.monster.getting_around_obstacle.saved_direction = null;
 
-			}
-
-			if (((game_state.monster.x >= (curr_ob.x + curr_ob.width)) || ((game_state.monster.x + game_state.monster.width) <= curr_ob.x)) && (game_state.monster.target_area.y <= (curr_ob.y + curr_ob.height))) {
-
 			    game_state.monster.getting_around_obstacle.obstacle = null;
 
 			}
 
-		    }
+//			if (((game_state.monster.x >= (curr_ob.x + curr_ob.width)) || ((game_state.monster.x + game_state.monster.width) <= curr_ob.x)) && (game_state.monster.target_area.y <= (curr_ob.y + curr_ob.height))) {
+
+//			}
 
 		    }
 
-		} else { //console.log('executando else (sem obstáculo). active: ', game_state.monster.getting_around_obstacle.active)
+		    } else { console.log('sem curr_ob, caiu no else, resetando flags')
+
+			game_state.monster.getting_around_obstacle.active = false;
+
+		        game_state.monster.getting_around_obstacle.left = false;
+
+		        game_state.monster.getting_around_obstacle.right = false;
+
+		        game_state.monster.getting_around_obstacle.up = false;
+
+		        game_state.monster.getting_around_obstacle.down = false;
+
+		        game_state.monster.getting_around_obstacle.saved_direction = null;
+
+		    }
+
+		} else { console.log('executando else (sem obstáculo). active: ', game_state.monster.getting_around_obstacle.active)
 
 		    if (!game_state.monster.getting_around_obstacle.active) {
+
+		        game_state.monster.getting_around_obstacle.left = false;
+
+		        game_state.monster.getting_around_obstacle.right = false;
 
 		        game_state.monster.getting_around_obstacle.up = false;
 
@@ -213,7 +248,8 @@ function monster () {
 
 
 	    if (target_areaCenterX < monsterCenterX - pace) {
-
+//console.log('saved_direction:', game_state.monster.getting_around_obstacle.saved_direction)
+//console.log('saved_direction:', game_state.monster.getting_around_obstacle.active)
 		if (!(game_state.monster.getting_around_obstacle.active && game_state.monster.getting_around_obstacle.saved_direction === 'right')){
 
 //console.log('movimentação natural: left')
@@ -226,6 +262,8 @@ function monster () {
 	    }
 
 	    else if (target_areaCenterX > monsterCenterX + pace) {
+//console.log('saved_direction:', game_state.monster.getting_around_obstacle.saved_direction)
+//console.log('saved_direction:', game_state.monster.getting_around_obstacle.active)
 
 		if (!(game_state.monster.getting_around_obstacle.active && game_state.monster.getting_around_obstacle.saved_direction === 'left')) {
 //console.log('movimentação natural: right')
@@ -238,6 +276,8 @@ function monster () {
 	    }
 
 	    if (target_areaCenterY < monsterCenterY - pace) {
+//console.log('saved_direction:', game_state.monster.getting_around_obstacle.saved_direction)
+//console.log('saved_direction:', game_state.monster.getting_around_obstacle.active)
 
 
 		if (!(game_state.monster.getting_around_obstacle.active && game_state.monster.getting_around_obstacle.saved_direction === 'down')) {
@@ -252,10 +292,13 @@ function monster () {
 	    }
 
 	    else if (target_areaCenterY > monsterCenterY + pace) {
-//console.log('movimentação natural: down')
+//console.log('saved_direction:', game_state.monster.getting_around_obstacle.saved_direction)
+//console.log('saved_direction:', game_state.monster.getting_around_obstacle.active)
+
 //console.log('saved_direction: ', game_state.monster.getting_around_obstacle.saved_direction)
 
 		if (!(game_state.monster.getting_around_obstacle.active && game_state.monster.getting_around_obstacle.saved_direction === 'up')) {
+//console.log('movimentação natural: down')
 
 			move_entity(game_state.monster, 'down');
 
