@@ -1,0 +1,8 @@
+paleta de cores do projeto:
+
+
+• #1a1008 (Marrom Quase Preto - Para as sombras e linhas do chão)
+• #3a2214 (Marrom Café - Para a madeira do assoalho e móveis)
+• #2c3e50 (Azul Petróleo Escuro - Para as paredes coloniais)
+• #7f8c8d (Cinza Mofo - Para detalhes de pedra ou rachaduras)
+• #ebebeb (Branco Acizentado/Pálido - Para a pele da Amanda e luzes)
