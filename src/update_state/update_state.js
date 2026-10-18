@@ -13,7 +13,7 @@ function update_state () {
 
     bells();
 
-    monster();
+//    monster();
 
     patrol_areas();
 
