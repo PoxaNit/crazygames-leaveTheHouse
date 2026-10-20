@@ -1,4 +1,4 @@
-import game_state from '../../../../src/game_state/game_state.js';
+import sprites from '../../../../src/game_state/assets/sprites/sprites.js';
 
 function floor () {
 
@@ -10,7 +10,7 @@ function floor () {
 
 	floor_img.onload = () => {
 
-	    game_state.assets.sprites.floor = floor_img;
+	    sprites.floor = floor_img;
 
 	    res();
 

@@ -15,11 +15,11 @@ function draw () {
 
     map_drawer();
 
-    door_drawer();
+//    door_drawer();
 
-    coins_drawer();
+  //  coins_drawer();
 
-    bells_drawer();
+    //bells_drawer();
 
     monster_drawer();
 

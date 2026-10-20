@@ -10,6 +10,9 @@ function init_map_physics() {
 
     // r = row (linha), c = column (coluna)
     for (let r = 0; r < game_state.map.rows; r++) {
+
+	if (!layout[r]) continue;
+
         for (let c = 0; c < game_state.map.cols; c++) {
             // Se o número for 1, injeta um obstáculo sólido para a física ler!
             if (layout[r][c] === 1) {

@@ -13,10 +13,10 @@ function move_entity (entity, direction) {
 	futureEntity.x -= entity.velocity;
 
 
-	if (canvas_collision(futureEntity)) {entity.x = 0;}
+//	if (canvas_collision(futureEntity)) {entity.x = 0;}
 
 
-	else if (!obstacles_collision(futureEntity, 'left')) {
+	/*else*/ if (!obstacles_collision(futureEntity, 'left')) {
 
 	    entity.x = futureEntity.x;
 
@@ -41,10 +41,10 @@ function move_entity (entity, direction) {
 	futureEntity.y -= entity.velocity;
 
 
-	if (canvas_collision(futureEntity)) {entity.y = 0;}
+	//if (canvas_collision(futureEntity)) {entity.y = 0;}
 
 
-	else if (!obstacles_collision(futureEntity, 'up')) {
+	/*else*/ if (!obstacles_collision(futureEntity, 'up')) {
 
 	    entity.y = futureEntity.y;
 
@@ -69,10 +69,10 @@ function move_entity (entity, direction) {
 	futureEntity.x += entity.velocity;
 
 
-	if (canvas_collision(futureEntity)) {entity.x = canvas.width - entity.width;}
+	//if (canvas_collision(futureEntity)) {entity.x = canvas.width - entity.width;}
 
 
-	else if (!obstacles_collision(futureEntity, 'right')) {
+	/*else*/ if (!obstacles_collision(futureEntity, 'right')) {
 
 	    entity.x = futureEntity.x;
 
@@ -97,10 +97,10 @@ function move_entity (entity, direction) {
 	futureEntity.y += entity.velocity;
 
 
-	if (canvas_collision(futureEntity)) {entity.y = canvas.height - entity.height;}
+	//if (canvas_collision(futureEntity)) {entity.y = canvas.height - entity.height;}
 
 
-	else if (!obstacles_collision(futureEntity, 'down')) {
+	/*else*/ if (!obstacles_collision(futureEntity, 'down')) {
 
 	    entity.y = futureEntity.y;
 

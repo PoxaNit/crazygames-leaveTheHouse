@@ -1,4 +1,4 @@
-import game_state from '../../../../src/game_state/game_state.js';
+import sprites from '../../../../src/game_state/assets/sprites/sprites.js';
 
 function wall () {
 
@@ -10,13 +10,13 @@ function wall () {
 
 	wall_img.onload = () => {
 
-	    game_state.assets.sprites.wall = wall_img;
+	    sprites.wall = wall_img;
 
 	    res();
 
 	}
 
-	wall_img.onerror = () => rej('Error: floor sprites couldn\'t be loaded');
+	wall_img.onerror = () => rej('Error: wall sprites couldn\'t be loaded');
 
     });
 
