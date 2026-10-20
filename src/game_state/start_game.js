@@ -23,8 +23,8 @@ function start_game () {
       player: {
         x: 70,
         y: 80,
-        width: 50,
-        height: 50,
+        width: 32,
+        height: 32,
 	base_velocity: 2,
         velocity: 2,
 	running_velocity: 6,
@@ -36,8 +36,8 @@ function start_game () {
       monster: {
         x: 600,
         y: 260,
-        width: 30,
-        height: 30,
+        width: 32,
+        height: 32,
 	base_velocity: 3,
         velocity: 3,
 	running_velocity: 7,

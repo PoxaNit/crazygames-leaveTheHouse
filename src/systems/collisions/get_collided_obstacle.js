@@ -1,38 +1,65 @@
 import game_state from '../../game_state/game_state.js';
+import get_tile_at_position from './get_tile_at_position.js';
 
-function get_collided_obstacle (entity, direction = null) {
+function get_collided_obstacle(entity, direction = null) {
+    const tile_size = game_state.map.tile_size;
+    let check_points = [];
 
-    return game_state.obstacles.find(ob => {
+    // Define coordinates shortcut
+    const x = entity.x;
+    const y = entity.y;
+    const w = entity.width;
+    const h = entity.height;
 
-        const is_colliding = (entity.x + entity.width >= ob.x &&
-                entity.x <= ob.x + ob.width &&
-                entity.y + entity.height >= ob.y &&
-                entity.y <= ob.y + ob.height);
+    // Direct quina filtering based on movement direction
+    if (direction === 'left') {
+        check_points = [
+            get_tile_at_position(x, y),
+            get_tile_at_position(x, y + h - 1)
+        ];
+    } else if (direction === 'right') {
+        check_points = [
+            get_tile_at_position(x + w - 1, y),
+            get_tile_at_position(x + w - 1, y + h - 1)
+        ];
+    } else if (direction === 'up') {
+        check_points = [
+            get_tile_at_position(x, y),
+            get_tile_at_position(x + w - 1, y)
+        ];
+    } else if (direction === 'down') {
+        check_points = [
+            get_tile_at_position(x, y + h - 1),
+            get_tile_at_position(x + w - 1, y + h - 1)
+        ];
+    } else {
+        // Generic check (all 4 corners if no direction provided)
+        check_points = [
+            get_tile_at_position(x, y),
+            get_tile_at_position(x + w - 1, y),
+            get_tile_at_position(x, y + h - 1),
+            get_tile_at_position(x + w - 1, y + h - 1)
+        ];
+    }
 
-	if (is_colliding) {
+    // Find the first corner hitting a wall (type 1)
+    for (let i = 0; i < check_points.length; i++) {
+        const tile = check_points[i];
+        if (tile.type === 1) {
+            return {
+                type: 1,
+                row: tile.row,
+                col: tile.col,
+                x: tile.col * tile_size,
+                y: tile.row * tile_size,
+                width: tile_size,
+                height: tile_size
+            };
+        }
+    }
 
-	    const ob_centerX = ob.x + (ob.width / 2);
-
-	    const ob_centerY = ob.y + (ob.height / 2);
-
-	    const entity_centerX = entity.x + (entity.width / 2);
-
-	    const entity_centerY = entity.y + (entity.height / 2);
-
-
-	    if (direction === 'left') return ob_centerX < entity_centerX;
-
-	    if (direction === 'right') return ob_centerX > entity_centerX;
-
-	    if (direction === 'up') return ob_centerY < entity_centerY;
-
-	    if (direction === 'down') return ob_centerY > entity_centerY;
-
-	    return true;
-
-	} else {return false}
-
-    });
+    return null; // Safe move
 }
 
 export default get_collided_obstacle;
+

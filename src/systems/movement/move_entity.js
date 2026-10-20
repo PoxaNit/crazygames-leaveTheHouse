@@ -28,7 +28,7 @@ function move_entity (entity, direction) {
 
 	    let ob = get_collided_obstacle(futureEntity, 'left');
 
-	    entity.x = ob.x + ob.width;
+	    if (ob) entity.x = ob.x + ob.width;
 
 	}
 
@@ -56,7 +56,7 @@ function move_entity (entity, direction) {
 
 	    let ob = get_collided_obstacle(futureEntity, 'up');
 
-	    entity.y = ob.y + ob.height;
+	    if (ob) entity.y = ob.y + ob.height;
 
 	}
 
@@ -84,7 +84,7 @@ function move_entity (entity, direction) {
 
 	    let ob = get_collided_obstacle(futureEntity, 'right');
 
-	    entity.x = ob.x - entity.width;
+	    if (ob) entity.x = ob.x - entity.width;
 
 	}
 
@@ -112,7 +112,7 @@ function move_entity (entity, direction) {
 
 	    let ob = get_collided_obstacle(futureEntity, 'down');
 
-	    entity.y = ob.y - entity.height;
+	    if (ob) entity.y = ob.y - entity.height;
 
 	}
 

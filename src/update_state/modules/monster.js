@@ -86,7 +86,7 @@ console.log('recommended_direction aós const =: ', recommended_direction)
 
 		}
 
-	    } else {
+	    } /*else {
 
 		if (game_state.monster.getting_around_obstacle.active) { //console.log('else > if > obstacle.active. saved: ', game_state.monster.getting_around_obstacle.saved_direction)
 
@@ -112,7 +112,7 @@ console.log('recommended_direction aós const =: ', recommended_direction)
 
 			    game_state.monster.getting_around_obstacle.obstacle = null;
 
-*/
+
 
 		    if (target_directions.includes('left')) {
 
@@ -248,7 +248,7 @@ console.log('includes up executando...')
 
 	        }
 
-	    }
+	    }*/
 
 
 

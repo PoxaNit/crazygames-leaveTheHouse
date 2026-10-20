@@ -8,15 +8,15 @@ import update_camera from '../../src/systems/camera/update_camera.js';
 
 function update_state () {
 
-//    door();
+    door();
 
-  //  coins();
+    coins();
 
-    //bells();
+    bells();
 
-    //monster();
+    monster();
 
-    patrol_areas();
+//    patrol_areas();
 
     player();
 
