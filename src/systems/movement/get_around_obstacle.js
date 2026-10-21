@@ -1,6 +1,7 @@
 import game_state from '../../game_state/game_state.js';
 import is_there_obstacle_in_the_way from '../collisions/is_there_obstacle_in_the_way.js';
 import target_area_directions from './target_area_directions.js';
+import get_tile_at_position from '../collisions/get_tile_at_position.js';
 
 function get_around_obstacle(entity) {
     const tile_size = game_state.map.tile_size;
@@ -57,6 +58,36 @@ function get_around_obstacle(entity) {
     else if (directions.includes('down')) {
         const ob = is_there_obstacle_in_the_way(entity, 'down');
         if (ob) {
+console.log('ob:', ob)
+	    const layout = game_state.map.layout;
+
+	    let left_side_blocks_count = 0;
+
+	    let right_side_blocks_count = 0;
+
+
+	    const pos = get_tile_at_position(entity.x, entity.y);
+
+console.log('pos:', pos)
+	    // calculating left side tiles
+	    for (let i = pos.col - 1; layout[ob.row][i] === 1; i--) {
+
+		left_side_blocks_count++;
+
+	    }
+
+	    // calculating left side tiles
+	    for (let i = pos.col + 1; layout[ob.row][i] === 1; i++) {
+
+		right_side_blocks_count++;
+
+	    }
+
+console.log('left_side_blocks_count:', left_side_blocks_count)
+console.log('right_side_blocks_count:', right_side_blocks_count)
+	    return left_side_blocks_count < right_side_blocks_count ? 'left' : 'right';
+
+/*
             const left_x = ob.escape_min * tile_size;
             const right_x = (ob.escape_max + 1) * tile_size;
 
@@ -64,6 +95,7 @@ function get_around_obstacle(entity) {
             const dist_right = Math.abs(entity.x - right_x);
 
             return dist_left < dist_right ? 'left' : 'right';
+*/
         }
 
     }

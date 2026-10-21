@@ -97,7 +97,8 @@ function start_game () {
 	    y: 0,
 	    width: 0,
 	    height: 0
-	  }
+	  },
+	  nodes: []
 	},
         state: {
           action: 'walking',
