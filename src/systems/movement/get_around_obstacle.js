@@ -16,8 +16,6 @@ function get_around_obstacle(entity) {
 
 	    const layout = game_state.map.layout;
 
-	    const pos = get_tile_at_position(entity.x, entity.y); // entity's position in tilemap
-
 
 	    let up_side_blocks_count = 0;
 
@@ -34,8 +32,9 @@ function get_around_obstacle(entity) {
 
 	    let last_down_left_block_col;
 
+
 	    // calculating up way tiles
-	    for (let i = pos.row; layout[i][ob.col] === 1; i--) {
+	    for (let i = ob.row; layout[i][ob.col] === 1; i--) {
 
 		up_side_blocks_count++;
 
@@ -44,7 +43,7 @@ function get_around_obstacle(entity) {
 	    }
 
 	    // calculating down way tiles
-	    for (let i = pos.row; layout[i][ob.col] === 1; i++) {
+	    for (let i = ob.row; layout[i][ob.col] === 1; i++) {
 
 		down_side_blocks_count++;
 
@@ -83,9 +82,22 @@ function get_around_obstacle(entity) {
 
 	        for (let i = last_down_right_block_row - 1; layout[i][last_down_left_block_col] === 1; i--) down_side_blocks_count++;
 
-	    }
 
-	    return up_side_blocks_count < down_side_blocks_count ? 'up' : 'down';
+		const target_pos = get_tile_at_position(entity.target_area.x, entity.target_area.y);
+
+		const target_is_inside_structure = (
+						    (target_pos.row > last_up_right_block_row) &&
+						    (target_pos.row < last_down_right_block_row) &&
+						    (target_pos.col > last_down_left_block_col)
+						   );
+
+		if (target_is_inside_structure) return up_side_blocks_count < down_side_blocks_count ? 'up' : 'down';
+
+		else {
+
+		}
+
+	    }
 
 	}
 
@@ -97,8 +109,6 @@ function get_around_obstacle(entity) {
 
 
 	    const layout = game_state.map.layout;
-
-	    const pos = get_tile_at_position(entity.x, entity.y); // entity's position in tilemap
 
 
 	    let up_side_blocks_count = 0;
@@ -117,7 +127,7 @@ function get_around_obstacle(entity) {
 	    let last_down_right_block_col;
 
 	    // calculating up way tiles
-	    for (let i = pos.row; layout[i][ob.col] === 1; i--) {
+	    for (let i = ob.row; layout[i][ob.col] === 1; i--) {
 
 		up_side_blocks_count++;
 
@@ -126,7 +136,7 @@ function get_around_obstacle(entity) {
 	    }
 
 	    // calculating down way tiles
-	    for (let i = pos.row; layout[i][ob.col] === 1; i++) {
+	    for (let i = ob.row; layout[i][ob.col] === 1; i++) {
 
 		down_side_blocks_count++;
 
@@ -164,9 +174,23 @@ function get_around_obstacle(entity) {
 
 	        for (let i = last_down_left_block_row - 1; layout[i][last_down_right_block_col] === 1; i--) down_side_blocks_count++;
 
-	    }
 
-	    return up_side_blocks_count < down_side_blocks_count ? 'up' : 'down';
+		const target_pos = get_tile_at_position(entity.target_area.x, entity.target_area.y);
+
+		const target_is_inside_structure = (
+						    (target_pos.row > last_up_left_block_row) &&
+						    (target_pos.row < last_down_left_block_row) &&
+						    ((target_pos.col < last_down_right_block_col) ||
+						    (target_pos.col < last_up_right_block_col))
+						   );
+
+		if (target_is_inside_structure) return up_side_blocks_count < down_side_blocks_count ? 'up' : 'down';
+
+		else {
+
+		}
+
+	    }
 
 
 	}
@@ -179,8 +203,6 @@ function get_around_obstacle(entity) {
         if (ob) {
 
 	    const layout = game_state.map.layout;
-
-	    const pos = get_tile_at_position(entity.x, entity.y); // entity's position in tilemap
 
 
 	    let left_side_blocks_count = 0;
@@ -199,7 +221,7 @@ function get_around_obstacle(entity) {
 	    let last_right_up_block_row;
 
 	    // calculating left side tiles
-	    for (let i = pos.col; layout[ob.row][i] === 1; i--) {
+	    for (let i = ob.col; layout[ob.row][i] === 1; i--) {
 
 		left_side_blocks_count++;
 
@@ -208,7 +230,7 @@ function get_around_obstacle(entity) {
 	    }
 
 	    // calculating right side tiles
-	    for (let i = pos.col; layout[ob.row][i] === 1; i++) {
+	    for (let i = ob.col; layout[ob.row][i] === 1; i++) {
 
 		right_side_blocks_count++;
 
@@ -247,6 +269,22 @@ function get_around_obstacle(entity) {
 
 	        for (let i = last_right_down_block_col - 1; layout[last_right_up_block_row][i] === 1; i--) right_side_blocks_count++;
 
+/*
+		const target_pos = get_tile_at_position(entity.target_area.x, entity.target_area.y);
+
+		const target_is_inside_structure = (
+						    (target_pos.row > last_up_left_block_row) &&
+						    (target_pos.row < last_down_left_block_row) &&
+						    ((target_pos.col < last_down_right_block_col) ||
+						    (target_pos.col < last_up_right_block_col))
+						   );
+
+		if (target_is_inside_structure) return up_side_blocks_count < down_side_blocks_count ? 'up' : 'down';
+
+		else {
+
+		}
+*/
 	    }
 
 	    return left_side_blocks_count < right_side_blocks_count ? 'left' : 'right';
@@ -257,12 +295,10 @@ function get_around_obstacle(entity) {
     }
 
     else if (directions.includes('down')) {
-        const ob = is_there_obstacle_in_the_way(entity, 'down');
+        const ob = /*is_there_obstacle_in_the_way(entity, 'down')*/null;
         if (ob) {
 
 	    const layout = game_state.map.layout;
-
-	    const pos = get_tile_at_position(entity.x, entity.y); // entity's position in tilemap
 
 
 	    let left_side_blocks_count = 0;
@@ -281,7 +317,7 @@ function get_around_obstacle(entity) {
 	    let last_right_down_block_row;
 
 	    // calculating left side tiles
-	    for (let i = pos.col; layout[ob.row][i] === 1; i--) {
+	    for (let i = ob.col; layout[ob.row][i] === 1; i--) {
 
 		left_side_blocks_count++;
 
@@ -290,14 +326,13 @@ function get_around_obstacle(entity) {
 	    }
 
 	    // calculating right side tiles
-	    for (let i = pos.col; layout[ob.row][i] === 1; i++) {
+	    for (let i = ob.col; layout[ob.row][i] === 1; i++) {
 
 		right_side_blocks_count++;
 
 		last_right_up_block_col = i;
 
 	    }
-
 
 
 	    if (last_left_up_block_col && last_right_up_block_col) {
@@ -342,4 +377,3 @@ function get_around_obstacle(entity) {
 }
 
 export default get_around_obstacle;
-
