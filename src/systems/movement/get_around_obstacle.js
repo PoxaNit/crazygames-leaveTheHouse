@@ -13,13 +13,79 @@ function get_around_obstacle(entity) {
     if (directions.includes('left')) {
         const ob = is_there_obstacle_in_the_way(entity, 'left');
         if (ob) {
-            const up_y = ob.escape_min * tile_size;
-            const down_y = (ob.escape_max + 1) * tile_size; // +1 handles the outer floor edge safely
 
-            const dist_up = Math.abs(entity.y - up_y);
-            const dist_down = Math.abs(entity.y - down_y);
+	    const layout = game_state.map.layout;
 
-            return dist_up < dist_down ? 'up' : 'down';
+	    const pos = get_tile_at_position(entity.x, entity.y); // entity's position in tilemap
+
+
+	    let up_side_blocks_count = 0;
+
+	    let down_side_blocks_count = 0;
+
+
+	    // last blocks to mark the end of the wall
+	    let last_up_right_block_row;
+
+	    let last_down_right_block_row;
+
+
+	    let last_up_left_block_col;
+
+	    let last_down_left_block_col;
+
+	    // calculating up way tiles
+	    for (let i = pos.row; layout[i][ob.col] === 1; i--) {
+
+		up_side_blocks_count++;
+
+		last_up_right_block_row = i;
+
+	    }
+
+	    // calculating down way tiles
+	    for (let i = pos.row; layout[i][ob.col] === 1; i++) {
+
+		down_side_blocks_count++;
+
+		last_down_right_block_row = i;
+
+	    }
+
+
+
+	    if (last_up_right_block_row && last_down_right_block_row) {
+
+	    // calculating up right to up left
+	    for (let c = ob.col; layout[last_up_right_block_row][c] === 1; c--) {
+
+		up_side_blocks_count++;
+
+		last_up_left_block_col = c;
+
+	    }
+
+
+	    // calculating down right to down left
+	    for (let c = ob.col; layout[last_down_right_block_row][c] === 1; c--) {
+
+		down_side_blocks_count++;
+
+		last_down_left_block_col = c;
+
+	    }
+
+	    }
+
+	    if (last_up_left_block_col && last_down_left_block_col) {
+
+	        for (let i = last_up_right_block_row + 1; layout[i][last_up_left_block_col] === 1; i++) up_side_blocks_count++;
+
+	        for (let i = last_down_right_block_row - 1; layout[i][last_down_left_block_col] === 1; i--) down_side_blocks_count++;
+
+	    }
+
+	    return up_side_blocks_count < down_side_blocks_count ? 'up' : 'down';
 
 	}
 
@@ -28,13 +94,80 @@ function get_around_obstacle(entity) {
     else if (directions.includes('right')) {
         const ob = is_there_obstacle_in_the_way(entity, 'right');
         if (ob) {
-            const up_y = ob.escape_min * tile_size;
-            const down_y = (ob.escape_max + 1) * tile_size; // +1 handles the outer floor edge safely
 
-            const dist_up = Math.abs(entity.y - up_y);
-            const dist_down = Math.abs(entity.y - down_y);
 
-            return dist_up < dist_down ? 'up' : 'down';
+	    const layout = game_state.map.layout;
+
+	    const pos = get_tile_at_position(entity.x, entity.y); // entity's position in tilemap
+
+
+	    let up_side_blocks_count = 0;
+
+	    let down_side_blocks_count = 0;
+
+
+	    // last blocks to mark the end of the wall
+	    let last_up_left_block_row;
+
+	    let last_down_left_block_row;
+
+
+	    let last_up_right_block_col;
+
+	    let last_down_right_block_col;
+
+	    // calculating up way tiles
+	    for (let i = pos.row; layout[i][ob.col] === 1; i--) {
+
+		up_side_blocks_count++;
+
+		last_up_left_block_row = i;
+
+	    }
+
+	    // calculating down way tiles
+	    for (let i = pos.row; layout[i][ob.col] === 1; i++) {
+
+		down_side_blocks_count++;
+
+		last_down_left_block_row = i;
+
+	    }
+
+
+	    if (last_up_left_block_row && last_down_left_block_row) {
+
+	    // calculating up left to up right
+	    for (let c = ob.col; layout[last_up_left_block_row][c] === 1; c++) {
+
+		up_side_blocks_count++;
+
+		last_up_right_block_col = c;
+
+	    }
+
+
+	    // calculating down left to down right
+	    for (let c = ob.col; layout[last_down_left_block_row][c] === 1; c++) {
+
+		down_side_blocks_count++;
+
+		last_down_right_block_col = c;
+
+	    }
+
+	    }
+
+	    if (last_up_right_block_col && last_down_right_block_col) {
+
+	        for (let i = last_up_left_block_row + 1; layout[i][last_up_right_block_col] === 1; i++) up_side_blocks_count++;
+
+	        for (let i = last_down_left_block_row - 1; layout[i][last_down_right_block_col] === 1; i--) down_side_blocks_count++;
+
+	    }
+
+	    return up_side_blocks_count < down_side_blocks_count ? 'up' : 'down';
+
 
 	}
 
@@ -44,13 +177,81 @@ function get_around_obstacle(entity) {
     if (directions.includes('up')) {
         const ob = is_there_obstacle_in_the_way(entity, 'up');
         if (ob) {
-            const left_x = ob.escape_min * tile_size;
-            const right_x = (ob.escape_max + 1) * tile_size;
 
-            const dist_left = Math.abs(entity.x - left_x);
-            const dist_right = Math.abs(entity.x - right_x);
+	    const layout = game_state.map.layout;
 
-            return dist_left < dist_right ? 'left' : 'right';
+	    const pos = get_tile_at_position(entity.x, entity.y); // entity's position in tilemap
+
+
+	    let left_side_blocks_count = 0;
+
+	    let right_side_blocks_count = 0;
+
+
+	    // last blocks to mark the end of the wall
+	    let last_left_down_block_col;
+
+	    let last_right_down_block_col;
+
+
+	    let last_left_up_block_row;
+
+	    let last_right_up_block_row;
+
+	    // calculating left side tiles
+	    for (let i = pos.col; layout[ob.row][i] === 1; i--) {
+
+		left_side_blocks_count++;
+
+		last_left_down_block_col = i;
+
+	    }
+
+	    // calculating right side tiles
+	    for (let i = pos.col; layout[ob.row][i] === 1; i++) {
+
+		right_side_blocks_count++;
+
+		last_right_down_block_col = i;
+
+	    }
+
+
+
+	    if (last_left_down_block_col && last_right_down_block_col) {
+
+	    // calculating down left to up left
+	    for (let r = ob.row; layout[r][last_left_down_block_col] === 1; r--) {
+
+		left_side_blocks_count++;
+
+		last_left_up_block_row = r;
+
+	    }
+
+
+	    // calculating down left to up left
+	    for (let r = ob.row; layout[r][last_right_down_block_col] === 1; r++) {
+
+		right_side_blocks_count++;
+
+		last_right_up_block_row = r;
+
+	    }
+
+	    }
+
+	    if (last_left_up_block_row && last_right_up_block_row) {
+
+	        for (let i = last_left_down_block_col + 1; layout[last_left_up_block_row][i] === 1; i++) left_side_blocks_count++;
+
+	        for (let i = last_right_down_block_col - 1; layout[last_right_up_block_row][i] === 1; i--) right_side_blocks_count++;
+
+	    }
+
+	    return left_side_blocks_count < right_side_blocks_count ? 'left' : 'right';
+
+
         }
 
     }
@@ -58,44 +259,81 @@ function get_around_obstacle(entity) {
     else if (directions.includes('down')) {
         const ob = is_there_obstacle_in_the_way(entity, 'down');
         if (ob) {
-console.log('ob:', ob)
+
 	    const layout = game_state.map.layout;
+
+	    const pos = get_tile_at_position(entity.x, entity.y); // entity's position in tilemap
+
 
 	    let left_side_blocks_count = 0;
 
 	    let right_side_blocks_count = 0;
 
 
-	    const pos = get_tile_at_position(entity.x, entity.y);
+	    // last blocks to mark the end of the wall
+	    let last_left_up_block_col;
 
-console.log('pos:', pos)
+	    let last_right_up_block_col;
+
+
+	    let last_left_down_block_row;
+
+	    let last_right_down_block_row;
+
 	    // calculating left side tiles
-	    for (let i = pos.col - 1; layout[ob.row][i] === 1; i--) {
+	    for (let i = pos.col; layout[ob.row][i] === 1; i--) {
 
 		left_side_blocks_count++;
 
+		last_left_up_block_col = i;
+
 	    }
 
-	    // calculating left side tiles
-	    for (let i = pos.col + 1; layout[ob.row][i] === 1; i++) {
+	    // calculating right side tiles
+	    for (let i = pos.col; layout[ob.row][i] === 1; i++) {
 
 		right_side_blocks_count++;
 
+		last_right_up_block_col = i;
+
 	    }
 
-console.log('left_side_blocks_count:', left_side_blocks_count)
-console.log('right_side_blocks_count:', right_side_blocks_count)
+
+
+	    if (last_left_up_block_col && last_right_up_block_col) {
+
+	    // calculating down left to up left
+	    for (let r = ob.row; layout[r][last_left_up_block_col] === 1; r++) {
+
+		left_side_blocks_count++;
+
+		last_left_down_block_row = r;
+
+	    }
+
+
+	    // calculating down right to up right
+	    for (let r = ob.row; layout[r][last_right_up_block_col] === 1; r++) {
+
+		right_side_blocks_count++;
+
+		last_right_down_block_row = r;
+
+	    }
+
+	    }
+
+
+	    if (last_left_down_block_row && last_right_down_block_row) {
+
+	        for (let i = last_left_up_block_col + 1; layout[last_left_down_block_row][i] === 1; i++) left_side_blocks_count++;
+
+	        for (let i = last_right_up_block_col - 1; layout[last_right_down_block_row][i] === 1; i--) right_side_blocks_count++;
+
+	    }
+
 	    return left_side_blocks_count < right_side_blocks_count ? 'left' : 'right';
 
-/*
-            const left_x = ob.escape_min * tile_size;
-            const right_x = (ob.escape_max + 1) * tile_size;
-
-            const dist_left = Math.abs(entity.x - left_x);
-            const dist_right = Math.abs(entity.x - right_x);
-
-            return dist_left < dist_right ? 'left' : 'right';
-*/
         }
 
     }
