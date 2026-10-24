@@ -78,9 +78,11 @@ function get_around_obstacle(entity) {
 
 	    if (last_up_left_block_col && last_down_left_block_col) {
 
-	        for (let i = last_up_right_block_row + 1; layout[i][last_up_left_block_col] === 1; i++) up_side_blocks_count++;
+		if (last_up_left_block_col !== ob.col)
+	            for (let i = last_up_right_block_row + 1; layout[i][last_up_left_block_col] === 1; i++) up_side_blocks_count++;
 
-	        for (let i = last_down_right_block_row - 1; layout[i][last_down_left_block_col] === 1; i--) down_side_blocks_count++;
+		if (last_down_left_block_col !== ob.col)
+	            for (let i = last_down_right_block_row - 1; layout[i][last_down_left_block_col] === 1; i--) down_side_blocks_count++;
 
 
 		const target_pos = get_tile_at_position(entity.target_area.x, entity.target_area.y);
@@ -171,9 +173,11 @@ function get_around_obstacle(entity) {
 
 	    if (last_up_right_block_col && last_down_right_block_col) {
 
-	        for (let i = last_up_left_block_row + 1; layout[i][last_up_right_block_col] === 1; i++) up_side_blocks_count++;
+		if (last_up_right_block_col !== ob.col)
+	            for (let i = last_up_left_block_row + 1; layout[i][last_up_right_block_col] === 1; i++) up_side_blocks_count++;
 
-	        for (let i = last_down_left_block_row - 1; layout[i][last_down_right_block_col] === 1; i--) down_side_blocks_count++;
+		if (last_down_right_block_col !== ob.col)
+	            for (let i = last_down_left_block_row - 1; layout[i][last_down_right_block_col] === 1; i--) down_side_blocks_count++;
 
 
 		const target_pos = get_tile_at_position(entity.target_area.x, entity.target_area.y);
@@ -225,7 +229,7 @@ function get_around_obstacle(entity) {
 	    for (let i = ob.col; layout[ob.row][i] === 1; i--) {
 
 		left_side_blocks_count++;
-
+//console.log('primeiro loop: left_side_blocks_count:', left_side_blocks_count)
 		last_left_down_block_col = i;
 
 	    }
@@ -247,7 +251,7 @@ function get_around_obstacle(entity) {
 	    for (let r = ob.row; layout[r][last_left_down_block_col] === 1; r--) {
 
 		left_side_blocks_count++;
-
+//console.log('segundo loop: left_side_blocks_count:', left_side_blocks_count)
 		last_left_up_block_row = r;
 
 	    }
@@ -266,19 +270,22 @@ function get_around_obstacle(entity) {
 
 	    if (last_left_up_block_row && last_right_up_block_row) {
 
-	        for (let i = last_left_down_block_col + 1; layout[last_left_up_block_row][i] === 1; i++) left_side_blocks_count++;
+		if ((last_left_up_block_row !== ob.row))
+		    for (let i = last_left_down_block_col + 1; layout[last_left_up_block_row][i] === 1; i++) left_side_blocks_count++;
 
-	        for (let i = last_right_down_block_col - 1; layout[last_right_up_block_row][i] === 1; i--) right_side_blocks_count++;
+		if ((last_right_up_block_row !== ob.row))
+		    for (let i = last_right_down_block_col - 1; layout[last_right_up_block_row][i] === 1; i--) right_side_blocks_count++;
 
 
 		const target_pos = get_tile_at_position(entity.target_area.x, entity.target_area.y);
 
-console.log('target row:', target_pos.row)
-console.log('target col:', target_pos.col)
-console.log('last_left_down_block_col:', last_left_down_block_col)
-console.log('last_right_down_block_col:', last_right_down_block_col)
-console.log('last_right_up_block_row:', last_right_up_block_row)
-console.log('last_left_up_block_row:', last_left_up_block_row)
+//console.log('target row:', target_pos.row)
+//console.log('target col:', target_pos.col)
+//console.log('last_left_down_block_col:', last_left_down_block_col)
+//console.log('last_right_down_block_col:', last_right_down_block_col)
+//console.log('last_right_up_block_row:', last_right_up_block_row)
+//console.log('last_left_up_block_row:', last_left_up_block_row)
+//console.log('left_side_blocks_count:', left_side_blocks_count, 'right_side_blocks_count:', right_side_blocks_count)
 		const target_is_inside_structure = (
 						    (target_pos.col >= last_left_down_block_col) &&
 						    (target_pos.col <= last_right_down_block_col) &&
@@ -292,7 +299,11 @@ console.log('last_left_up_block_row:', last_left_up_block_row)
 
 		}
 
+
 	    }
+
+
+
 
         }
 
@@ -365,9 +376,11 @@ console.log('last_left_up_block_row:', last_left_up_block_row)
 
 	    if (last_left_down_block_row && last_right_down_block_row) {
 
-	        for (let i = last_left_up_block_col + 1; layout[last_left_down_block_row][i] === 1; i++) left_side_blocks_count++;
+		if (last_left_down_block_row !== ob.row)
+	            for (let i = last_left_up_block_col + 1; layout[last_left_down_block_row][i] === 1; i++) left_side_blocks_count++;
 
-	        for (let i = last_right_up_block_col - 1; layout[last_right_down_block_row][i] === 1; i--) right_side_blocks_count++;
+		if (last_right_down_block_row !== ob.row)
+	            for (let i = last_right_up_block_col - 1; layout[last_right_down_block_row][i] === 1; i--) right_side_blocks_count++;
 
 
 		const target_pos = get_tile_at_position(entity.target_area.x, entity.target_area.y);

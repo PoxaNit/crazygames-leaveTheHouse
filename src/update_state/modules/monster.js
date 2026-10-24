@@ -88,6 +88,8 @@ console.log('recommended_direction aós const =: ', recommended_direction)
 
 	    } else {
 
+		game_state.monster.getting_around_obstacle.saved_direction = null;
+
 		if (game_state.monster.getting_around_obstacle.active) { //console.log('else > if > obstacle.active. saved: ', game_state.monster.getting_around_obstacle.saved_direction)
 
 		    const target_directions = target_area_directions(game_state.monster); // directions the taret area is in relation to the monster
