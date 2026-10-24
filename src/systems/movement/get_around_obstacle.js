@@ -86,9 +86,10 @@ function get_around_obstacle(entity) {
 		const target_pos = get_tile_at_position(entity.target_area.x, entity.target_area.y);
 
 		const target_is_inside_structure = (
-						    (target_pos.row > last_up_right_block_row) &&
-						    (target_pos.row < last_down_right_block_row) &&
-						    (target_pos.col > last_down_left_block_col)
+						    (target_pos.row >= last_up_right_block_row) &&
+						    (target_pos.row <= last_down_right_block_row) &&
+						    ((target_pos.col >= last_down_left_block_col) ||
+						    (target_pos.col >= last_up_left_block_col))
 						   );
 
 		if (target_is_inside_structure) return up_side_blocks_count < down_side_blocks_count ? 'up' : 'down';
@@ -178,10 +179,10 @@ function get_around_obstacle(entity) {
 		const target_pos = get_tile_at_position(entity.target_area.x, entity.target_area.y);
 
 		const target_is_inside_structure = (
-						    (target_pos.row > last_up_left_block_row) &&
-						    (target_pos.row < last_down_left_block_row) &&
-						    ((target_pos.col < last_down_right_block_col) ||
-						    (target_pos.col < last_up_right_block_col))
+						    (target_pos.row >= last_up_left_block_row) &&
+						    (target_pos.row <= last_down_left_block_row) &&
+						    ((target_pos.col <= last_down_right_block_col) ||
+						    (target_pos.col <= last_up_right_block_col))
 						   );
 
 		if (target_is_inside_structure) return up_side_blocks_count < down_side_blocks_count ? 'up' : 'down';
@@ -253,7 +254,7 @@ function get_around_obstacle(entity) {
 
 
 	    // calculating down left to up left
-	    for (let r = ob.row; layout[r][last_right_down_block_col] === 1; r++) {
+	    for (let r = ob.row; layout[r][last_right_down_block_col] === 1; r--) {
 
 		right_side_blocks_count++;
 
@@ -269,33 +270,36 @@ function get_around_obstacle(entity) {
 
 	        for (let i = last_right_down_block_col - 1; layout[last_right_up_block_row][i] === 1; i--) right_side_blocks_count++;
 
-/*
+
 		const target_pos = get_tile_at_position(entity.target_area.x, entity.target_area.y);
 
+console.log('target row:', target_pos.row)
+console.log('target col:', target_pos.col)
+console.log('last_left_down_block_col:', last_left_down_block_col)
+console.log('last_right_down_block_col:', last_right_down_block_col)
+console.log('last_right_up_block_row:', last_right_up_block_row)
+console.log('last_left_up_block_row:', last_left_up_block_row)
 		const target_is_inside_structure = (
-						    (target_pos.row > last_up_left_block_row) &&
-						    (target_pos.row < last_down_left_block_row) &&
-						    ((target_pos.col < last_down_right_block_col) ||
-						    (target_pos.col < last_up_right_block_col))
+						    (target_pos.col >= last_left_down_block_col) &&
+						    (target_pos.col <= last_right_down_block_col) &&
+						    ((target_pos.row >= last_right_up_block_row) ||
+						    (target_pos.row >= last_left_up_block_row))
 						   );
 
-		if (target_is_inside_structure) return up_side_blocks_count < down_side_blocks_count ? 'up' : 'down';
+		if (target_is_inside_structure) return left_side_blocks_count < right_side_blocks_count ? 'left' : 'right';
 
 		else {
 
 		}
-*/
+
 	    }
-
-	    return left_side_blocks_count < right_side_blocks_count ? 'left' : 'right';
-
 
         }
 
     }
 
     else if (directions.includes('down')) {
-        const ob = /*is_there_obstacle_in_the_way(entity, 'down')*/null;
+        const ob = is_there_obstacle_in_the_way(entity, 'down');
         if (ob) {
 
 	    const layout = game_state.map.layout;
@@ -365,9 +369,23 @@ function get_around_obstacle(entity) {
 
 	        for (let i = last_right_up_block_col - 1; layout[last_right_down_block_row][i] === 1; i--) right_side_blocks_count++;
 
-	    }
 
-	    return left_side_blocks_count < right_side_blocks_count ? 'left' : 'right';
+		const target_pos = get_tile_at_position(entity.target_area.x, entity.target_area.y);
+
+		const target_is_inside_structure = (
+						    (target_pos.col >= last_left_up_block_col) &&
+						    (target_pos.col <= last_right_up_block_col) &&
+						    ((target_pos.row <= last_right_down_block_row) ||
+						    (target_pos.row <= last_left_down_block_row))
+						   );
+
+		if (target_is_inside_structure) return left_side_blocks_count < right_side_blocks_count ? 'left' : 'right';
+
+		else {
+
+		}
+
+	    }
 
         }
 
