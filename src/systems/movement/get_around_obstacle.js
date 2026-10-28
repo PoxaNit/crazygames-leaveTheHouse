@@ -13,6 +13,79 @@ function get_around_obstacle(entity) {
     // ----------------------------------------------------
     if (directions.includes('left')) {
         const ob = is_there_obstacle_in_the_way(entity, 'left');
+
+
+	if (entity.getting_around_obstacle.up) {
+
+	    if (entity.getting_around_obstacle.action_type === 'seeking_entry') {
+
+		if (!ob) {
+
+		    entity.getting_around_obstacle.up = false;
+
+		    entity.getting_around_obstacle.action_type = null;
+
+		    entity.getting_around_obstacle.obstacle = null;
+
+		    entity.getting_around_obstacle.saved_direction = null;
+
+		}
+
+	    }
+
+	    else if (entity.getting_around_obstacle.action_type === 'contouring_perimeter') {
+
+	        if ((entity.y + entity.height) <= entity.getting_around_obstacle.obstacle.y) {
+
+		    entity.getting_around_obstacle.up = false;
+
+		    entity.getting_around_obstacle.action_type = null;
+
+		    entity.getting_around_obstacle.obstacle = null;
+
+		    entity.getting_around_obstacle.saved_direction = null;
+
+	        }
+
+	    }
+
+	} else if (entity.getting_around_obstacle.down) {
+
+	    if (entity.getting_around_obstacle.action_type === 'seeking_entry') {
+
+		if (!ob) {
+
+		    entity.getting_around_obstacle.down = false;
+
+		    entity.getting_around_obstacle.action_type = null;
+
+		    entity.getting_around_obstacle.obstacle = null;
+
+		    entity.getting_around_obstacle.saved_direction = null;
+
+		}
+
+	    }
+
+	    else if (entity.getting_around_obstacle.action_type === 'contouring_perimeter') {
+
+	        if (entity.y >= (entity.getting_around_obstacle.obstacle.y + entity.getting_around_obstacle.obstacle.height)) {
+
+		    entity.getting_around_obstacle.down = false;
+
+		    entity.getting_around_obstacle.action_type = null;
+
+		    entity.getting_around_obstacle.obstacle = null;
+
+		    entity.getting_around_obstacle.saved_direction = null;
+
+	        }
+
+	    }
+
+	}
+
+
         if (ob) {
 
 	    const layout = game_state.map.layout;
@@ -34,12 +107,20 @@ function get_around_obstacle(entity) {
 	    let last_down_left_block_col;
 
 
+	    let structure_width_up = 0;
+	    let structure_width_down = 0;
+	    let structure_height_left = 0;
+	    let structure_height_right = -1;
+
+
 	    // calculating up way tiles
 	    for (let i = ob.row; layout[i][ob.col] === 1; i--) {
 
 		up_side_blocks_count++;
 
 		last_up_right_block_row = i;
+
+		structure_height_right++;
 
 	    }
 
@@ -50,6 +131,8 @@ function get_around_obstacle(entity) {
 
 		last_down_right_block_row = i;
 
+		structure_height_right++;
+
 	    }
 
 
@@ -57,33 +140,64 @@ function get_around_obstacle(entity) {
 	    if (last_up_right_block_row && last_down_right_block_row) {
 
 	    // calculating up right to up left
-	    for (let c = ob.col; layout[last_up_right_block_row][c] === 1; c--) {
+	        for (let c = ob.col; layout[last_up_right_block_row][c] === 1; c--) {
 
-		up_side_blocks_count++;
+		    up_side_blocks_count++;
 
-		last_up_left_block_col = c;
+		    last_up_left_block_col = c;
 
-	    }
+		    structure_width_up++;
+
+
+	        }
 
 
 	    // calculating down right to down left
-	    for (let c = ob.col; layout[last_down_right_block_row][c] === 1; c--) {
+	        for (let c = ob.col; layout[last_down_right_block_row][c] === 1; c--) {
 
-		down_side_blocks_count++;
+		    down_side_blocks_count++;
 
-		last_down_left_block_col = c;
+		    last_down_left_block_col = c;
 
-	    }
+		    structure_width_down++;
+
+	        }
 
 	    }
 
 	    if (last_up_left_block_col && last_down_left_block_col) {
 
-		if (last_up_left_block_col !== ob.col)
-	            for (let i = last_up_right_block_row + 1; layout[i][last_up_left_block_col] === 1; i++) up_side_blocks_count++;
+		if (last_up_left_block_col !== ob.col) {
 
-		if (last_down_left_block_col !== ob.col)
-	            for (let i = last_down_right_block_row - 1; layout[i][last_down_left_block_col] === 1; i--) down_side_blocks_count++;
+		    let count = 0;
+
+	            for (let i = last_up_right_block_row + 1; layout[i][last_up_left_block_col] === 1; i++) {
+
+			up_side_blocks_count++;
+
+			count++;
+
+		        if (count > structure_height_left) structure_height_left++;
+
+		    }
+
+		}
+
+		if (last_down_left_block_col !== ob.col) {
+
+		    let count = 0;
+
+	            for (let i = last_down_right_block_row - 1; layout[i][last_down_left_block_col] === 1; i--) {
+
+			down_side_blocks_count++;
+
+			count++;
+
+		        if (count > structure_height_left) structure_height_left++;
+
+		    }
+
+		}
 
 
 		const target_pos = get_tile_at_position(entity.target_area.x, entity.target_area.y);
@@ -95,9 +209,45 @@ function get_around_obstacle(entity) {
 						    (target_pos.col >= last_up_left_block_col))
 						   );
 
-		if (target_is_inside_structure) return up_side_blocks_count < down_side_blocks_count ? 'up' : 'down';
+		const correct_direction = up_side_blocks_count < down_side_blocks_count ? 'up' : 'down';
+
+		if (target_is_inside_structure) {
+
+		    entity.getting_around_obstacle.action_type = 'seeking_entry';
+		    entity.getting_around_obstacle.active = true;
+		    entity.getting_around_obstacle.left = true;
+
+		    if (correct_direction === 'up') entity.getting_around_obstacle.saved_direction = 'up';
+
+		    else if (correct_direction === 'down') entity.getting_around_obstacle.saved_direction = 'down';
+
+
+		    return correct_direction;
+
+		}
 
 		else {
+
+		    const tile_pos = get_tile_position(last_up_right_block_row, last_down_left_block_col);
+
+		    const w = structure_width_up > structure_width_down ? structure_width_up * 32 : structure_width_down * 32;
+
+		    const h = structure_height_left > structure_height_right ? structure_height_left * 32: structure_height_right * 32;
+
+		    entity.getting_around_obstacle.obstacle = {x: tile_pos.x, y: tile_pos.y, width: w, height: h};
+
+
+
+		    entity.getting_around_obstacle.active = true;
+		    entity.getting_around_obstacle.action_type = 'contouring_perimeter';
+		    entity.getting_around_obstacle.left = true;
+
+
+		    if (correct_direction === 'up') entity.getting_around_obstacle.saved_direction = 'up';
+
+		    else if (correct_direction === 'down') entity.getting_around_obstacle.saved_direction = 'down';
+
+		    return correct_direction;
 
 		}
 
@@ -116,7 +266,7 @@ function get_around_obstacle(entity) {
 	    if (entity.getting_around_obstacle.action_type === 'seeking_entry') {
 
 		if (!ob) {
-console.log('up > seeking... > !ob')
+
 		    entity.getting_around_obstacle.up = false;
 
 		    entity.getting_around_obstacle.action_type = null;
@@ -132,7 +282,6 @@ console.log('up > seeking... > !ob')
 	    else if (entity.getting_around_obstacle.action_type === 'contouring_perimeter') {
 
 	        if ((entity.y + entity.height) <= entity.getting_around_obstacle.obstacle.y) {
-console.log('> (entity < obstacle)')
 
 		    entity.getting_around_obstacle.up = false;
 
@@ -146,7 +295,42 @@ console.log('> (entity < obstacle)')
 
 	    }
 
+	} else if (entity.getting_around_obstacle.down) {
+
+	    if (entity.getting_around_obstacle.action_type === 'seeking_entry') {
+
+		if (!ob) {
+
+		    entity.getting_around_obstacle.down = false;
+
+		    entity.getting_around_obstacle.action_type = null;
+
+		    entity.getting_around_obstacle.obstacle = null;
+
+		    entity.getting_around_obstacle.saved_direction = null;
+
+		}
+
+	    }
+
+	    else if (entity.getting_around_obstacle.action_type === 'contouring_perimeter') {
+
+	        if (entity.y >= (entity.getting_around_obstacle.obstacle.y + entity.getting_around_obstacle.obstacle.height)) {
+
+		    entity.getting_around_obstacle.down = false;
+
+		    entity.getting_around_obstacle.action_type = null;
+
+		    entity.getting_around_obstacle.obstacle = null;
+
+		    entity.getting_around_obstacle.saved_direction = null;
+
+	        }
+
+	    }
+
 	}
+
 
 
         if (ob) {
@@ -170,12 +354,25 @@ console.log('> (entity < obstacle)')
 
 	    let last_down_right_block_col;
 
+
+	    let structure_width_up = 0;
+
+	    let structure_width_down = 0;
+
+	    let structure_height_left = -1;
+
+	    let structure_height_right = 0;
+
+
+
 	    // calculating up way tiles
 	    for (let i = ob.row; layout[i][ob.col] === 1; i--) {
 
 		up_side_blocks_count++;
 
 		last_up_left_block_row = i;
+
+		structure_height_left++;
 
 	    }
 
@@ -186,40 +383,72 @@ console.log('> (entity < obstacle)')
 
 		last_down_left_block_row = i;
 
+		structure_height_left++;
+
 	    }
 
 
 	    if (last_up_left_block_row && last_down_left_block_row) {
 
 	    // calculating up left to up right
-	    for (let c = ob.col; layout[last_up_left_block_row][c] === 1; c++) {
+	        for (let c = ob.col; layout[last_up_left_block_row][c] === 1; c++) {
 
-		up_side_blocks_count++;
+		    up_side_blocks_count++;
 
-		last_up_right_block_col = c;
+		    last_up_right_block_col = c;
 
-	    }
+		    structure_width_up++;
+
+	        }
 
 
 	    // calculating down left to down right
-	    for (let c = ob.col; layout[last_down_left_block_row][c] === 1; c++) {
+	        for (let c = ob.col; layout[last_down_left_block_row][c] === 1; c++) {
 
-		down_side_blocks_count++;
+		    down_side_blocks_count++;
 
-		last_down_right_block_col = c;
+		    last_down_right_block_col = c;
 
-	    }
+		    structure_width_down++;
+
+	        }
 
 	    }
 
 	    if (last_up_right_block_col && last_down_right_block_col) {
 
-		if (last_up_right_block_col !== ob.col)
-	            for (let i = last_up_left_block_row + 1; layout[i][last_up_right_block_col] === 1; i++) up_side_blocks_count++;
+		if (last_up_right_block_col !== ob.col) {
 
-		if (last_down_right_block_col !== ob.col)
-	            for (let i = last_down_left_block_row - 1; layout[i][last_down_right_block_col] === 1; i--) down_side_blocks_count++;
+		    let count = 0;
 
+		    // calculating right up to right down
+	            for (let i = last_up_left_block_row + 1; layout[i][last_up_right_block_col] === 1; i++) {
+
+			up_side_blocks_count++;
+
+			count++;
+
+			if (count > structure_height_right) structure_height_right++;
+
+		    }
+
+		}
+
+		if (last_down_right_block_col !== ob.col) {
+
+		    let count = 0;
+
+	            for (let i = last_down_left_block_row - 1; layout[i][last_down_right_block_col] === 1; i--) {
+
+			down_side_blocks_count++;
+
+			count++;
+
+			if (count > structure_height_right) structure_height_right++;
+
+		    }
+
+		}
 
 		const target_pos = get_tile_at_position(entity.target_area.x, entity.target_area.y);
 
@@ -230,23 +459,131 @@ console.log('> (entity < obstacle)')
 						    (target_pos.col <= last_up_right_block_col))
 						   );
 
-		if (target_is_inside_structure) return up_side_blocks_count < down_side_blocks_count ? 'up' : 'down';
+		const correct_direction = up_side_blocks_count < down_side_blocks_count ? 'up' : 'down';
 
-//		else {
+		if (target_is_inside_structure) {
 
-//		}
+		    entity.getting_around_obstacle.action_type = 'seeking_entry';
+		    entity.getting_around_obstacle.active = true;
+		    entity.getting_around_obstacle.right = true;
 
-	    }
+		    if (correct_direction === 'up') entity.getting_around_obstacle.saved_direction = 'up';
 
-	} else {
-console.log('> no ob >')
+		    else if (correct_direction === 'down') entity.getting_around_obstacle.saved_direction = 'down';
+
+
+		    return correct_direction;
+
+		}
+
+		else {
+
+		    const tile_pos = get_tile_position(last_up_left_block_row, last_down_right_block_col);
+
+		    const w = structure_width_up > structure_width_down ? structure_width_up * 32 : structure_width_down * 32;
+
+		    const h = structure_height_left > structure_height_right ? structure_height_left * 32: structure_height_right * 32;
+
+		    entity.getting_around_obstacle.obstacle = {x: tile_pos.x, y: tile_pos.y, width: w, height: h};
+
+
+
+		    entity.getting_around_obstacle.active = true;
+		    entity.getting_around_obstacle.action_type = 'contouring_perimeter';
+		    entity.getting_around_obstacle.right = true;
+
+
+		    if (correct_direction === 'up') entity.getting_around_obstacle.saved_direction = 'up';
+
+		    else if (correct_direction === 'down') entity.getting_around_obstacle.saved_direction = 'down';
+
+		    return correct_direction;
+
+		}
+
+
 	}
 
     }
 
-    // ----------------------------------------------------
+
     if (directions.includes('up')) {
         const ob = is_there_obstacle_in_the_way(entity, 'up');
+
+	if (entity.getting_around_obstacle.left) {
+
+	    if (entity.getting_around_obstacle.action_type === 'seeking_entry') {
+
+		if (!ob) {
+
+		    entity.getting_around_obstacle.left = false;
+
+		    entity.getting_around_obstacle.action_type = null;
+
+		    entity.getting_around_obstacle.obstacle = null;
+
+		    entity.getting_around_obstacle.saved_direction = null;
+
+		}
+
+	    }
+
+	    else if (entity.getting_around_obstacle.action_type === 'contouring_perimeter') {
+
+	        if ((entity.x + entity.width) <= entity.getting_around_obstacle.obstacle.x) {
+
+		    entity.getting_around_obstacle.left = false;
+
+		    entity.getting_around_obstacle.action_type = null;
+
+		    entity.getting_around_obstacle.obstacle = null;
+
+		    entity.getting_around_obstacle.saved_direction = null;
+
+	        }
+
+	    }
+
+	} else if (entity.getting_around_obstacle.right) {
+
+	    if (entity.getting_around_obstacle.action_type === 'seeking_entry') {
+
+		if (!ob) {
+
+		    entity.getting_around_obstacle.right = false;
+
+		    entity.getting_around_obstacle.action_type = null;
+
+		    entity.getting_around_obstacle.obstacle = null;
+
+		    entity.getting_around_obstacle.saved_direction = null;
+
+		}
+
+	    }
+
+	    else if (entity.getting_around_obstacle.action_type === 'contouring_perimeter') {
+
+	        if (entity.x >= (entity.getting_around_obstacle.obstacle.x + entity.getting_around_obstacle.obstacle.width)) {
+
+		    entity.getting_around_obstacle.right = false;
+
+		    entity.getting_around_obstacle.action_type = null;
+
+		    entity.getting_around_obstacle.obstacle = null;
+
+		    entity.getting_around_obstacle.saved_direction = null;
+
+	        }
+
+	    }
+
+	}
+
+
+
+
+
         if (ob) {
 
 	    const layout = game_state.map.layout;
@@ -268,13 +605,13 @@ console.log('> no ob >')
 	    let last_right_up_block_row;
 
 
-	    let structure_width_up = -1;
+	    let structure_width_up = 0;
 
 	    let structure_width_down = -1;
 
-	    let structure_height_left = -1;
+	    let structure_height_left = 0;
 
-	    let structure_height_right = -1;
+	    let structure_height_right = 0;
 
 	    // calculating left side tiles
 	    for (let i = ob.col; layout[ob.row][i] === 1; i--) {
@@ -328,22 +665,32 @@ console.log('> no ob >')
 	    if (last_left_up_block_row && last_right_up_block_row) {
 
 		if ((last_left_up_block_row !== ob.row)) {
+
+		    let count = 0;
+
 		    for (let i = last_left_down_block_col + 1; layout[last_left_up_block_row][i] === 1; i++) {
 
 			left_side_blocks_count++;
 
-			structure_width_up++;
+			count++;
+
+			if (count > structure_width_up) structure_width_up++;
 
 		    }
 
 		}
 
 		if ((last_right_up_block_row !== ob.row)) {
+
+		    let count = 0;
+
 		    for (let i = last_right_down_block_col - 1; layout[last_right_up_block_row][i] === 1; i--) {
 
 			right_side_blocks_count++;
 
-			structure_width_up++;
+			count++;
+
+			if (count > structure_width_up) structure_width_up++;
 
 		    }
 
@@ -351,13 +698,6 @@ console.log('> no ob >')
 
 		const target_pos = get_tile_at_position(entity.target_area.x, entity.target_area.y);
 
-//console.log('target row:', target_pos.row)
-//console.log('target col:', target_pos.col)
-//console.log('last_left_down_block_col:', last_left_down_block_col)
-//console.log('last_right_down_block_col:', last_right_down_block_col)
-//console.log('last_right_up_block_row:', last_right_up_block_row)
-//console.log('last_left_up_block_row:', last_left_up_block_row)
-//console.log('left_side_blocks_count:', left_side_blocks_count, 'right_side_blocks_count:', right_side_blocks_count)
 		const target_is_inside_structure = (
 						    (target_pos.col >= last_left_down_block_col) &&
 						    (target_pos.col <= last_right_down_block_col) &&
@@ -383,7 +723,6 @@ console.log('> no ob >')
 		}
 
 		else {
-console.log('target is not inside structure')
 
 		    const tile_pos = get_tile_position(last_left_up_block_row, last_left_down_block_col);
 
@@ -399,7 +738,6 @@ console.log('target is not inside structure')
 		    entity.getting_around_obstacle.action_type = 'contouring_perimeter';
 		    entity.getting_around_obstacle.up = true;
 
-console.log('up:', entity.getting_around_obstacle.up)
 
 		    if (correct_direction === 'left') entity.getting_around_obstacle.saved_direction = 'left';
 
@@ -411,13 +749,24 @@ console.log('up:', entity.getting_around_obstacle.up)
 
 	    }
 
-        } else {
-/*
-	    if (entity.getting_around_obstacle.up) {
+        }
 
-		if ((entity.y + entity.height) <= entity.getting_around_obstacle.obstacle.y) {
+    }
 
-		    entity.getting_around_obstacle.up = false;
+    else if (directions.includes('down')) {
+
+        const ob = is_there_obstacle_in_the_way(entity, 'down');
+
+
+	if (entity.getting_around_obstacle.left) {
+
+	    if (entity.getting_around_obstacle.action_type === 'seeking_entry') {
+
+		if (!ob) {
+
+		    entity.getting_around_obstacle.left = false;
+
+		    entity.getting_around_obstacle.action_type = null;
 
 		    entity.getting_around_obstacle.obstacle = null;
 
@@ -426,13 +775,62 @@ console.log('up:', entity.getting_around_obstacle.up)
 		}
 
 	    }
-*/
+
+	    else if (entity.getting_around_obstacle.action_type === 'contouring_perimeter') {
+
+	        if ((entity.x + entity.width) <= entity.getting_around_obstacle.obstacle.x) {
+
+		    entity.getting_around_obstacle.left = false;
+
+		    entity.getting_around_obstacle.action_type = null;
+
+		    entity.getting_around_obstacle.obstacle = null;
+
+		    entity.getting_around_obstacle.saved_direction = null;
+
+	        }
+
+	    }
+
+	} else if (entity.getting_around_obstacle.right) {
+
+	    if (entity.getting_around_obstacle.action_type === 'seeking_entry') {
+
+		if (!ob) {
+
+		    entity.getting_around_obstacle.right = false;
+
+		    entity.getting_around_obstacle.action_type = null;
+
+		    entity.getting_around_obstacle.obstacle = null;
+
+		    entity.getting_around_obstacle.saved_direction = null;
+
+		}
+
+	    }
+
+	    else if (entity.getting_around_obstacle.action_type === 'contouring_perimeter') {
+
+	        if (entity.x >= (entity.getting_around_obstacle.obstacle.x + entity.getting_around_obstacle.obstacle.width)) {
+
+		    entity.getting_around_obstacle.right = false;
+
+		    entity.getting_around_obstacle.action_type = null;
+
+		    entity.getting_around_obstacle.obstacle = null;
+
+		    entity.getting_around_obstacle.saved_direction = null;
+
+	        }
+
+	    }
+
 	}
 
-    }
 
-    else if (directions.includes('down')) {
-        const ob = is_there_obstacle_in_the_way(entity, 'down');
+
+
         if (ob) {
 
 	    const layout = game_state.map.layout;
@@ -455,7 +853,9 @@ console.log('up:', entity.getting_around_obstacle.up)
 
 
 
-	    let structure_width = -1; // will be added the two directions of the wall
+	    let structure_width_up = -1; // will be added the two directions of the wall
+
+	    let structure_width_down = 0;
 
 	    let structure_height_left = 0;
 
@@ -468,7 +868,7 @@ console.log('up:', entity.getting_around_obstacle.up)
 
 		last_left_up_block_col = i;
 
-		structure_width++;
+		structure_width_up++;
 	    }
 
 	    // calculating right side tiles
@@ -478,47 +878,74 @@ console.log('up:', entity.getting_around_obstacle.up)
 
 		last_right_up_block_col = i;
 
-		structure_width++;
+		structure_width_up++;
 
 	    }
 
 
 	    if (last_left_up_block_col && last_right_up_block_col) {
 
-	    // calculating down left to up left
-	    for (let r = ob.row; layout[r][last_left_up_block_col] === 1; r++) {
+	        // calculating down left to up left
+	        for (let r = ob.row; layout[r][last_left_up_block_col] === 1; r++) {
 
-		left_side_blocks_count++;
+		    left_side_blocks_count++;
 
-		last_left_down_block_row = r;
+		    last_left_down_block_row = r;
 
-		structure_height_left++;
+		    structure_height_left++;
 
-	    }
+	        }
 
 
 	    // calculating down right to up right
-	    for (let r = ob.row; layout[r][last_right_up_block_col] === 1; r++) {
+	        for (let r = ob.row; layout[r][last_right_up_block_col] === 1; r++) {
 
-		right_side_blocks_count++;
+		    right_side_blocks_count++;
 
-		last_right_down_block_row = r;
+		    last_right_down_block_row = r;
 
-		structure_height_right++;
+		    structure_height_right++;
 
-	    }
+	        }
 
 	    }
 
 
 	    if (last_left_down_block_row && last_right_down_block_row) {
 
-		if (last_left_down_block_row !== ob.row)
-	            for (let i = last_left_up_block_col + 1; layout[last_left_down_block_row][i] === 1; i++) left_side_blocks_count++;
+		if (last_left_down_block_row !== ob.row) {
 
-		if (last_right_down_block_row !== ob.row)
-	            for (let i = last_right_up_block_col - 1; layout[last_right_down_block_row][i] === 1; i--) right_side_blocks_count++;
+		    let count = 0;
 
+	            for (let i = last_left_up_block_col + 1; layout[last_left_down_block_row][i] === 1; i++) {
+
+			left_side_blocks_count++;
+
+			count++;
+
+			if (count > structure_width_down) structure_width_down++;
+
+		    }
+
+		}
+
+		if (last_right_down_block_row !== ob.row) {
+
+		    let count = 0;
+
+	            for (let i = last_right_up_block_col - 1; layout[last_right_down_block_row][i] === 1; i--) {
+
+			right_side_blocks_count++;
+
+			count++;
+
+			if (count > structure_width_down) structure_width_down++;
+
+		    }
+
+		}
+
+	    }
 
 		const target_pos = get_tile_at_position(entity.target_area.x, entity.target_area.y);
 
@@ -530,17 +957,26 @@ console.log('up:', entity.getting_around_obstacle.up)
 						   );
 
 		const correct_direction = left_side_blocks_count < right_side_blocks_count ? 'left' : 'right';
-//return correct_direction;
+
+		if (target_is_inside_structure) {
+
+		    entity.getting_around_obstacle.action_type = 'seeking_entry';
+		    entity.getting_around_obstacle.active = true;
+		    entity.getting_around_obstacle.down = true;
+
+		    if (correct_direction === 'left') entity.getting_around_obstacle.saved_direction = 'left';
+
+		    else if (correct_direction === 'right') entity.getting_around_obstacle.saved_direction = 'right';
 
 
-		if (target_is_inside_structure) return correct_direction;
+		    return correct_direction;
 
-		else {
+		} else {
 
 
 		    const tile_pos = get_tile_position(ob.row, last_left_up_block_col);
 
-		    const w = structure_width * 32;
+		    const w = structure_width_up > structure_width_down ? structure_width_up * 32 : structure_width_down * 32;
 
 		    const h = structure_height_left > structure_height_right ? structure_height_left * 32: structure_height_right * 32;
 
@@ -562,23 +998,7 @@ console.log('up:', entity.getting_around_obstacle.up)
 
 	    }
 
-        } else {
-
-	    if (entity.getting_around_obstacle.down) {
-
-		if (entity.y >= (entity.getting_around_obstacle.obstacle.y + entity.getting_around_obstacle.obstacle.height)) {
-
-		    entity.getting_around_obstacle.down = false;
-
-		    entity.getting_around_obstacle.obstacle = null;
-
-		    entity.getting_around_obstacle.saved_direction = null;
-
-		}
-
-	    }
-
-	}
+        }
 
     }
 
