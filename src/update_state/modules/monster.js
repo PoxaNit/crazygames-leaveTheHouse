@@ -25,12 +25,12 @@ function monster () {
 
 
 	if (game_state.monster.state.action === 'walking' || game_state.monster.state.action === 'running') {
-
+/*
 	    game_state.monster.getting_around_obstacle.left = false;
 	    game_state.monster.getting_around_obstacle.right = false;
 	    game_state.monster.getting_around_obstacle.up = false;
 	    game_state.monster.getting_around_obstacle.down = false;
-
+*/
 	    const recommended_direction = get_around_obstacle(game_state.monster); // verificar se o módulo está retornando o valor gravado
 console.log('recommended_direction aós const =: ', recommended_direction)
 	    const current_obstacle = is_there_obstacle_in_the_way(game_state.monster);
@@ -87,7 +87,7 @@ console.log('recommended_direction aós const =: ', recommended_direction)
 		}
 
 	    } else {
-
+/*
 		game_state.monster.getting_around_obstacle.saved_direction = null;
 
 		if (game_state.monster.getting_around_obstacle.active) { //console.log('else > if > obstacle.active. saved: ', game_state.monster.getting_around_obstacle.saved_direction)
@@ -113,7 +113,7 @@ console.log('recommended_direction aós const =: ', recommended_direction)
                 	    game_state.monster.getting_around_obstacle.saved_direction = null;
 
 			    game_state.monster.getting_around_obstacle.obstacle = null;
-*/
+
 
 
 		    if (target_directions.includes('left')) {
@@ -249,7 +249,7 @@ console.log('includes up executando...')
 		    }
 
 	        }
-
+*/
 	    }
 
 

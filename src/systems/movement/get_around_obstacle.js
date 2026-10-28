@@ -2,6 +2,7 @@ import game_state from '../../game_state/game_state.js';
 import is_there_obstacle_in_the_way from '../collisions/is_there_obstacle_in_the_way.js';
 import target_area_directions from './target_area_directions.js';
 import get_tile_at_position from '../collisions/get_tile_at_position.js';
+import get_tile_position from '../collisions/get_tile_position.js';
 
 function get_around_obstacle(entity) {
     const tile_size = game_state.map.tile_size;
@@ -106,8 +107,48 @@ function get_around_obstacle(entity) {
 
     }
 
-    else if (directions.includes('right')) {
+    else if (directions.includes('right')) { //console.log('right direction >')
+
         const ob = is_there_obstacle_in_the_way(entity, 'right');
+
+	if (entity.getting_around_obstacle.up) {
+
+	    if (entity.getting_around_obstacle.action_type === 'seeking_entry') {
+
+		if (!ob) {
+console.log('up > seeking... > !ob')
+		    entity.getting_around_obstacle.up = false;
+
+		    entity.getting_around_obstacle.action_type = null;
+
+		    entity.getting_around_obstacle.obstacle = null;
+
+		    entity.getting_around_obstacle.saved_direction = null;
+
+		}
+
+	    }
+
+	    else if (entity.getting_around_obstacle.action_type === 'contouring_perimeter') {
+
+	        if ((entity.y + entity.height) <= entity.getting_around_obstacle.obstacle.y) {
+console.log('> (entity < obstacle)')
+
+		    entity.getting_around_obstacle.up = false;
+
+		    entity.getting_around_obstacle.action_type = null;
+
+		    entity.getting_around_obstacle.obstacle = null;
+
+		    entity.getting_around_obstacle.saved_direction = null;
+
+	        }
+
+	    }
+
+	}
+
+
         if (ob) {
 
 
@@ -191,13 +232,14 @@ function get_around_obstacle(entity) {
 
 		if (target_is_inside_structure) return up_side_blocks_count < down_side_blocks_count ? 'up' : 'down';
 
-		else {
+//		else {
 
-		}
+//		}
 
 	    }
 
-
+	} else {
+console.log('> no ob >')
 	}
 
     }
@@ -225,6 +267,15 @@ function get_around_obstacle(entity) {
 
 	    let last_right_up_block_row;
 
+
+	    let structure_width_up = -1;
+
+	    let structure_width_down = -1;
+
+	    let structure_height_left = -1;
+
+	    let structure_height_right = -1;
+
 	    // calculating left side tiles
 	    for (let i = ob.col; layout[ob.row][i] === 1; i--) {
 
@@ -232,6 +283,7 @@ function get_around_obstacle(entity) {
 //console.log('primeiro loop: left_side_blocks_count:', left_side_blocks_count)
 		last_left_down_block_col = i;
 
+		structure_width_down++;
 	    }
 
 	    // calculating right side tiles
@@ -241,41 +293,61 @@ function get_around_obstacle(entity) {
 
 		last_right_down_block_col = i;
 
-	    }
+		structure_width_down++;
 
+	    }
 
 
 	    if (last_left_down_block_col && last_right_down_block_col) {
 
-	    // calculating down left to up left
-	    for (let r = ob.row; layout[r][last_left_down_block_col] === 1; r--) {
+	        // calculating down left to up left
+	        for (let r = ob.row; layout[r][last_left_down_block_col] === 1; r--) {
 
-		left_side_blocks_count++;
+		    left_side_blocks_count++;
 //console.log('segundo loop: left_side_blocks_count:', left_side_blocks_count)
-		last_left_up_block_row = r;
+		    last_left_up_block_row = r;
 
-	    }
+		    structure_height_left++;
+
+	        }
 
 
-	    // calculating down left to up left
-	    for (let r = ob.row; layout[r][last_right_down_block_col] === 1; r--) {
+	        // calculating down right to up right
+	        for (let r = ob.row; layout[r][last_right_down_block_col] === 1; r--) {
 
-		right_side_blocks_count++;
+		    right_side_blocks_count++;
 
-		last_right_up_block_row = r;
+		    last_right_up_block_row = r;
 
-	    }
+		    structure_height_right++;
+
+	        }
 
 	    }
 
 	    if (last_left_up_block_row && last_right_up_block_row) {
 
-		if ((last_left_up_block_row !== ob.row))
-		    for (let i = last_left_down_block_col + 1; layout[last_left_up_block_row][i] === 1; i++) left_side_blocks_count++;
+		if ((last_left_up_block_row !== ob.row)) {
+		    for (let i = last_left_down_block_col + 1; layout[last_left_up_block_row][i] === 1; i++) {
 
-		if ((last_right_up_block_row !== ob.row))
-		    for (let i = last_right_down_block_col - 1; layout[last_right_up_block_row][i] === 1; i--) right_side_blocks_count++;
+			left_side_blocks_count++;
 
+			structure_width_up++;
+
+		    }
+
+		}
+
+		if ((last_right_up_block_row !== ob.row)) {
+		    for (let i = last_right_down_block_col - 1; layout[last_right_up_block_row][i] === 1; i--) {
+
+			right_side_blocks_count++;
+
+			structure_width_up++;
+
+		    }
+
+		}
 
 		const target_pos = get_tile_at_position(entity.target_area.x, entity.target_area.y);
 
@@ -293,19 +365,69 @@ function get_around_obstacle(entity) {
 						    (target_pos.row >= last_left_up_block_row))
 						   );
 
-		if (target_is_inside_structure) return left_side_blocks_count < right_side_blocks_count ? 'left' : 'right';
+		const correct_direction = left_side_blocks_count < right_side_blocks_count ? 'left' : 'right';
 
-		else {
+		if (target_is_inside_structure) {
+
+		    entity.getting_around_obstacle.action_type = 'seeking_entry';
+		    entity.getting_around_obstacle.active = true;
+		    entity.getting_around_obstacle.up = true;
+
+		    if (correct_direction === 'left') entity.getting_around_obstacle.saved_direction = 'left';
+
+		    else if (correct_direction === 'right') entity.getting_around_obstacle.saved_direction = 'right';
+
+
+		    return correct_direction;
 
 		}
 
+		else {
+console.log('target is not inside structure')
+
+		    const tile_pos = get_tile_position(last_left_up_block_row, last_left_down_block_col);
+
+		    const w = structure_width_up > structure_width_down ? structure_width_up * 32 : structure_width_up * 32;
+
+		    const h = structure_height_left > structure_height_right ? structure_height_left * 32: structure_height_right * 32;
+
+		    entity.getting_around_obstacle.obstacle = {x: tile_pos.x, y: tile_pos.y, width: w, height: h};
+
+
+
+		    entity.getting_around_obstacle.active = true;
+		    entity.getting_around_obstacle.action_type = 'contouring_perimeter';
+		    entity.getting_around_obstacle.up = true;
+
+console.log('up:', entity.getting_around_obstacle.up)
+
+		    if (correct_direction === 'left') entity.getting_around_obstacle.saved_direction = 'left';
+
+		    else if (correct_direction === 'right') entity.getting_around_obstacle.saved_direction = 'right';
+
+		    return correct_direction;
+
+		}
 
 	    }
 
+        } else {
+/*
+	    if (entity.getting_around_obstacle.up) {
 
+		if ((entity.y + entity.height) <= entity.getting_around_obstacle.obstacle.y) {
 
+		    entity.getting_around_obstacle.up = false;
 
-        }
+		    entity.getting_around_obstacle.obstacle = null;
+
+		    entity.getting_around_obstacle.saved_direction = null;
+
+		}
+
+	    }
+*/
+	}
 
     }
 
@@ -331,6 +453,14 @@ function get_around_obstacle(entity) {
 
 	    let last_right_down_block_row;
 
+
+
+	    let structure_width = -1; // will be added the two directions of the wall
+
+	    let structure_height_left = 0;
+
+	    let structure_height_right = 0;
+
 	    // calculating left side tiles
 	    for (let i = ob.col; layout[ob.row][i] === 1; i--) {
 
@@ -338,6 +468,7 @@ function get_around_obstacle(entity) {
 
 		last_left_up_block_col = i;
 
+		structure_width++;
 	    }
 
 	    // calculating right side tiles
@@ -346,6 +477,8 @@ function get_around_obstacle(entity) {
 		right_side_blocks_count++;
 
 		last_right_up_block_col = i;
+
+		structure_width++;
 
 	    }
 
@@ -359,6 +492,8 @@ function get_around_obstacle(entity) {
 
 		last_left_down_block_row = r;
 
+		structure_height_left++;
+
 	    }
 
 
@@ -368,6 +503,8 @@ function get_around_obstacle(entity) {
 		right_side_blocks_count++;
 
 		last_right_down_block_row = r;
+
+		structure_height_right++;
 
 	    }
 
@@ -392,15 +529,56 @@ function get_around_obstacle(entity) {
 						    (target_pos.row <= last_left_down_block_row))
 						   );
 
-		if (target_is_inside_structure) return left_side_blocks_count < right_side_blocks_count ? 'left' : 'right';
+		const correct_direction = left_side_blocks_count < right_side_blocks_count ? 'left' : 'right';
+//return correct_direction;
+
+
+		if (target_is_inside_structure) return correct_direction;
 
 		else {
+
+
+		    const tile_pos = get_tile_position(ob.row, last_left_up_block_col);
+
+		    const w = structure_width * 32;
+
+		    const h = structure_height_left > structure_height_right ? structure_height_left * 32: structure_height_right * 32;
+
+		    entity.getting_around_obstacle.obstacle = {x: tile_pos.x, y: tile_pos.y, width: w, height: h};
+
+
+
+		    entity.getting_around_obstacle.active = true;
+		    entity.getting_around_obstacle.down = true;
+
+
+		    if (correct_direction === 'left') entity.getting_around_obstacle.saved_direction = 'left';
+
+		    else if (correct_direction === 'right') entity.getting_around_obstacle.saved_direction = 'right';
+
+		    return correct_direction;
 
 		}
 
 	    }
 
-        }
+        } else {
+
+	    if (entity.getting_around_obstacle.down) {
+
+		if (entity.y >= (entity.getting_around_obstacle.obstacle.y + entity.getting_around_obstacle.obstacle.height)) {
+
+		    entity.getting_around_obstacle.down = false;
+
+		    entity.getting_around_obstacle.obstacle = null;
+
+		    entity.getting_around_obstacle.saved_direction = null;
+
+		}
+
+	    }
+
+	}
 
     }
 

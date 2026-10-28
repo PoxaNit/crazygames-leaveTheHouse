@@ -53,7 +53,8 @@ function start_game () {
 	    y: null,
 	    width: null,
 	    height: null,
-	  }
+	  },
+	  action_type: null // seeking_entry / contouring_perimeter / escaping_compartiment
 	},
 	patrol_areas: [
 	  {
