@@ -7,13 +7,15 @@ import get_tile_position from '../collisions/get_tile_position.js';
 function get_around_obstacle(entity) {
     const tile_size = game_state.map.tile_size;
     const directions = target_area_directions(entity);
-
+console.log('entity, right after function executes:', entity)
     // ----------------------------------------------------
     // HORIZONTAL BARRIERS (Left / Right) -> Evade Up or Down
     // ----------------------------------------------------
+
     if (directions.includes('left')) {
         const ob = is_there_obstacle_in_the_way(entity, 'left');
 
+	let must_execute_rest = true;
 
 	if (entity.getting_around_obstacle.up) {
 
@@ -25,7 +27,7 @@ function get_around_obstacle(entity) {
 
 		    entity.getting_around_obstacle.action_type = null;
 
-		    entity.getting_around_obstacle.obstacle = null;
+		    entity.getting_around_obstacle.obstacle = {x: null, y: null, width: null, height: null};
 
 		    entity.getting_around_obstacle.saved_direction = null;
 
@@ -35,13 +37,15 @@ function get_around_obstacle(entity) {
 
 	    else if (entity.getting_around_obstacle.action_type === 'contouring_perimeter') {
 
+		must_execute_rest = false;
+
 	        if ((entity.y + entity.height) <= entity.getting_around_obstacle.obstacle.y) {
 
 		    entity.getting_around_obstacle.up = false;
 
 		    entity.getting_around_obstacle.action_type = null;
 
-		    entity.getting_around_obstacle.obstacle = null;
+		    entity.getting_around_obstacle.obstacle = {x: null, y: null, width: null, height: null};
 
 		    entity.getting_around_obstacle.saved_direction = null;
 
@@ -59,7 +63,7 @@ function get_around_obstacle(entity) {
 
 		    entity.getting_around_obstacle.action_type = null;
 
-		    entity.getting_around_obstacle.obstacle = null;
+		    entity.getting_around_obstacle.obstacle = {x: null, y: null, width: null, height: null};
 
 		    entity.getting_around_obstacle.saved_direction = null;
 
@@ -69,13 +73,15 @@ function get_around_obstacle(entity) {
 
 	    else if (entity.getting_around_obstacle.action_type === 'contouring_perimeter') {
 
+		must_execute_rest = false;
+
 	        if (entity.y >= (entity.getting_around_obstacle.obstacle.y + entity.getting_around_obstacle.obstacle.height)) {
 
 		    entity.getting_around_obstacle.down = false;
 
 		    entity.getting_around_obstacle.action_type = null;
 
-		    entity.getting_around_obstacle.obstacle = null;
+		    entity.getting_around_obstacle.obstacle = {x: null, y: null, width: null, height: null};
 
 		    entity.getting_around_obstacle.saved_direction = null;
 
@@ -86,7 +92,7 @@ function get_around_obstacle(entity) {
 	}
 
 
-        if (ob) {
+        if (ob /*&& must_execute_rest*/) {
 
 	    const layout = game_state.map.layout;
 
@@ -261,6 +267,8 @@ function get_around_obstacle(entity) {
 
         const ob = is_there_obstacle_in_the_way(entity, 'right');
 
+	let must_execute_rest = true;
+
 	if (entity.getting_around_obstacle.up) {
 
 	    if (entity.getting_around_obstacle.action_type === 'seeking_entry') {
@@ -271,7 +279,7 @@ function get_around_obstacle(entity) {
 
 		    entity.getting_around_obstacle.action_type = null;
 
-		    entity.getting_around_obstacle.obstacle = null;
+		    entity.getting_around_obstacle.obstacle = {x: null, y: null, width: null, height: null};
 
 		    entity.getting_around_obstacle.saved_direction = null;
 
@@ -281,13 +289,15 @@ function get_around_obstacle(entity) {
 
 	    else if (entity.getting_around_obstacle.action_type === 'contouring_perimeter') {
 
+		must_execute_rest = false;
+
 	        if ((entity.y + entity.height) <= entity.getting_around_obstacle.obstacle.y) {
 
 		    entity.getting_around_obstacle.up = false;
 
 		    entity.getting_around_obstacle.action_type = null;
 
-		    entity.getting_around_obstacle.obstacle = null;
+		    entity.getting_around_obstacle.obstacle = {x: null, y: null, width: null, height: null};
 
 		    entity.getting_around_obstacle.saved_direction = null;
 
@@ -305,7 +315,7 @@ function get_around_obstacle(entity) {
 
 		    entity.getting_around_obstacle.action_type = null;
 
-		    entity.getting_around_obstacle.obstacle = null;
+		    entity.getting_around_obstacle.obstacle = {x: null, y: null, width: null, height: null};
 
 		    entity.getting_around_obstacle.saved_direction = null;
 
@@ -315,13 +325,15 @@ function get_around_obstacle(entity) {
 
 	    else if (entity.getting_around_obstacle.action_type === 'contouring_perimeter') {
 
+		must_execute_rest = false;
+
 	        if (entity.y >= (entity.getting_around_obstacle.obstacle.y + entity.getting_around_obstacle.obstacle.height)) {
 
 		    entity.getting_around_obstacle.down = false;
 
 		    entity.getting_around_obstacle.action_type = null;
 
-		    entity.getting_around_obstacle.obstacle = null;
+		    entity.getting_around_obstacle.obstacle = {x: null, y: null, width: null, height: null};
 
 		    entity.getting_around_obstacle.saved_direction = null;
 
@@ -333,8 +345,7 @@ function get_around_obstacle(entity) {
 
 
 
-        if (ob) {
-
+        if (ob && must_execute_rest) {
 
 	    const layout = game_state.map.layout;
 
@@ -501,6 +512,7 @@ function get_around_obstacle(entity) {
 
 		}
 
+	    }
 
 	}
 
@@ -509,7 +521,7 @@ function get_around_obstacle(entity) {
 
     if (directions.includes('up')) {
         const ob = is_there_obstacle_in_the_way(entity, 'up');
-
+/*
 	if (entity.getting_around_obstacle.left) {
 
 	    if (entity.getting_around_obstacle.action_type === 'seeking_entry') {
@@ -520,7 +532,7 @@ function get_around_obstacle(entity) {
 
 		    entity.getting_around_obstacle.action_type = null;
 
-		    entity.getting_around_obstacle.obstacle = null;
+		    entity.getting_around_obstacle.obstacle = {x: null, y: null, width: null, height: null};
 
 		    entity.getting_around_obstacle.saved_direction = null;
 
@@ -536,7 +548,7 @@ function get_around_obstacle(entity) {
 
 		    entity.getting_around_obstacle.action_type = null;
 
-		    entity.getting_around_obstacle.obstacle = null;
+		    entity.getting_around_obstacle.obstacle = {x: null, y: null, width: null, height: null};
 
 		    entity.getting_around_obstacle.saved_direction = null;
 
@@ -554,7 +566,7 @@ function get_around_obstacle(entity) {
 
 		    entity.getting_around_obstacle.action_type = null;
 
-		    entity.getting_around_obstacle.obstacle = null;
+		    entity.getting_around_obstacle.obstacle = {x: null, y: null, width: null, height: null};
 
 		    entity.getting_around_obstacle.saved_direction = null;
 
@@ -570,7 +582,7 @@ function get_around_obstacle(entity) {
 
 		    entity.getting_around_obstacle.action_type = null;
 
-		    entity.getting_around_obstacle.obstacle = null;
+		    entity.getting_around_obstacle.obstacle = {x: null, y: null, width: null, height: null};
 
 		    entity.getting_around_obstacle.saved_direction = null;
 
@@ -582,8 +594,8 @@ function get_around_obstacle(entity) {
 
 
 
-
-
+*/
+/*
         if (ob) {
 
 	    const layout = game_state.map.layout;
@@ -750,14 +762,14 @@ function get_around_obstacle(entity) {
 	    }
 
         }
-
+*/
     }
 
     else if (directions.includes('down')) {
 
         const ob = is_there_obstacle_in_the_way(entity, 'down');
-
-
+console.log('ob:', ob)
+/*
 	if (entity.getting_around_obstacle.left) {
 
 	    if (entity.getting_around_obstacle.action_type === 'seeking_entry') {
@@ -768,7 +780,7 @@ function get_around_obstacle(entity) {
 
 		    entity.getting_around_obstacle.action_type = null;
 
-		    entity.getting_around_obstacle.obstacle = null;
+		    entity.getting_around_obstacle.obstacle = {x: null, y: null, width: null, height: null};
 
 		    entity.getting_around_obstacle.saved_direction = null;
 
@@ -784,7 +796,7 @@ function get_around_obstacle(entity) {
 
 		    entity.getting_around_obstacle.action_type = null;
 
-		    entity.getting_around_obstacle.obstacle = null;
+		    entity.getting_around_obstacle.obstacle = {x: null, y: null, width: null, height: null};
 
 		    entity.getting_around_obstacle.saved_direction = null;
 
@@ -802,7 +814,7 @@ function get_around_obstacle(entity) {
 
 		    entity.getting_around_obstacle.action_type = null;
 
-		    entity.getting_around_obstacle.obstacle = null;
+		    entity.getting_around_obstacle.obstacle = {x: null, y: null, width: null, height: null};
 
 		    entity.getting_around_obstacle.saved_direction = null;
 
@@ -818,7 +830,7 @@ function get_around_obstacle(entity) {
 
 		    entity.getting_around_obstacle.action_type = null;
 
-		    entity.getting_around_obstacle.obstacle = null;
+		    entity.getting_around_obstacle.obstacle = {x: null, y: null, width: null, height: null};
 
 		    entity.getting_around_obstacle.saved_direction = null;
 
@@ -828,11 +840,11 @@ function get_around_obstacle(entity) {
 
 	}
 
-
+*/
 
 
         if (ob) {
-
+console.log('there is ob')
 	    const layout = game_state.map.layout;
 
 
@@ -945,7 +957,6 @@ function get_around_obstacle(entity) {
 
 		}
 
-	    }
 
 		const target_pos = get_tile_at_position(entity.target_area.x, entity.target_area.y);
 
@@ -959,7 +970,7 @@ function get_around_obstacle(entity) {
 		const correct_direction = left_side_blocks_count < right_side_blocks_count ? 'left' : 'right';
 
 		if (target_is_inside_structure) {
-
+console.log('target is inside structure')
 		    entity.getting_around_obstacle.action_type = 'seeking_entry';
 		    entity.getting_around_obstacle.active = true;
 		    entity.getting_around_obstacle.down = true;
@@ -972,7 +983,7 @@ function get_around_obstacle(entity) {
 		    return correct_direction;
 
 		} else {
-
+console.log('target is outside structure')
 
 		    const tile_pos = get_tile_position(ob.row, last_left_up_block_col);
 
@@ -981,9 +992,9 @@ function get_around_obstacle(entity) {
 		    const h = structure_height_left > structure_height_right ? structure_height_left * 32: structure_height_right * 32;
 
 		    entity.getting_around_obstacle.obstacle = {x: tile_pos.x, y: tile_pos.y, width: w, height: h};
+console.log('entity after assignment:', entity)
 
-
-
+		    entity.getting_around_obstacle.action_type = 'contouring_perimeter';
 		    entity.getting_around_obstacle.active = true;
 		    entity.getting_around_obstacle.down = true;
 
@@ -1003,6 +1014,7 @@ function get_around_obstacle(entity) {
     }
 
     return null; // No obstacles blocking the intention, keep natural alignment flow
+
 }
 
 export default get_around_obstacle;

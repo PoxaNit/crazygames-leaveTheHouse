@@ -33,11 +33,6 @@ function monster () {
 */
 	    const recommended_direction = get_around_obstacle(game_state.monster); // verificar se o módulo está retornando o valor gravado
 console.log('recommended_direction aós const =: ', recommended_direction)
-	    const current_obstacle = is_there_obstacle_in_the_way(game_state.monster);
-
-	    if (current_obstacle) game_state.monster.getting_around_obstacle.obstacle = current_obstacle;
-
-
 
 
 	    if (recommended_direction) {
