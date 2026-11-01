@@ -346,7 +346,7 @@ console.log('entity, right after function executes:', entity)
 
 
         if (ob && must_execute_rest) {
-
+//console.log('executando bloco right...')
 	    const layout = game_state.map.layout;
 
 
@@ -470,8 +470,16 @@ console.log('entity, right after function executes:', entity)
 						    (target_pos.col <= last_up_right_block_col))
 						   );
 
-		const correct_direction = up_side_blocks_count < down_side_blocks_count ? 'up' : 'down';
+//	console.log('directions tem down:', directions.includes('down'))
 
+
+		let correct_direction;
+
+		if (up_side_blocks_count === down_side_blocks_count) {console.log('ambos lados têm número de blocos iguais');correct_direction = directions.includes('down') ? 'down' : 'up';}
+
+		else {console.log('blocos não iguais');correct_direction = up_side_blocks_count < down_side_blocks_count ? 'up' : 'down';}
+
+console.log('correct_direction:', correct_direction, 'up_side_blocks_count:', up_side_blocks_count, 'down_side_blocks_count:', down_side_blocks_count)
 		if (target_is_inside_structure) {
 
 		    entity.getting_around_obstacle.action_type = 'seeking_entry';
