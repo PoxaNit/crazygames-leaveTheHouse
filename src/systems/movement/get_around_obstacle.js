@@ -37,7 +37,7 @@ console.log('entity, right after function executes:', entity)
 
 	    else if (entity.getting_around_obstacle.action_type === 'contouring_perimeter') {
 
-		must_execute_rest = false;
+		if (!ob) must_execute_rest = false;
 
 	        if ((entity.y + entity.height) <= entity.getting_around_obstacle.obstacle.y) {
 
@@ -73,7 +73,7 @@ console.log('entity, right after function executes:', entity)
 
 	    else if (entity.getting_around_obstacle.action_type === 'contouring_perimeter') {
 
-		must_execute_rest = false;
+		if (!ob) must_execute_rest = false;
 
 	        if (entity.y >= (entity.getting_around_obstacle.obstacle.y + entity.getting_around_obstacle.obstacle.height)) {
 
@@ -92,7 +92,7 @@ console.log('entity, right after function executes:', entity)
 	}
 
 
-        if (ob /*&& must_execute_rest*/) {
+        if (ob && must_execute_rest) {
 
 	    const layout = game_state.map.layout;
 
@@ -289,7 +289,7 @@ console.log('entity, right after function executes:', entity)
 
 	    else if (entity.getting_around_obstacle.action_type === 'contouring_perimeter') {
 
-		must_execute_rest = false;
+		if (!ob) must_execute_rest = false;
 
 	        if ((entity.y + entity.height) <= entity.getting_around_obstacle.obstacle.y) {
 
@@ -325,7 +325,7 @@ console.log('entity, right after function executes:', entity)
 
 	    else if (entity.getting_around_obstacle.action_type === 'contouring_perimeter') {
 
-		must_execute_rest = false;
+		if (!ob) must_execute_rest = false;
 
 	        if (entity.y >= (entity.getting_around_obstacle.obstacle.y + entity.getting_around_obstacle.obstacle.height)) {
 
@@ -521,7 +521,9 @@ console.log('entity, right after function executes:', entity)
 
     if (directions.includes('up')) {
         const ob = is_there_obstacle_in_the_way(entity, 'up');
-/*
+
+	let must_execute_rest = true;
+
 	if (entity.getting_around_obstacle.left) {
 
 	    if (entity.getting_around_obstacle.action_type === 'seeking_entry') {
@@ -541,6 +543,8 @@ console.log('entity, right after function executes:', entity)
 	    }
 
 	    else if (entity.getting_around_obstacle.action_type === 'contouring_perimeter') {
+
+		if (!ob) must_execute_rest = false;
 
 	        if ((entity.x + entity.width) <= entity.getting_around_obstacle.obstacle.x) {
 
@@ -576,6 +580,8 @@ console.log('entity, right after function executes:', entity)
 
 	    else if (entity.getting_around_obstacle.action_type === 'contouring_perimeter') {
 
+		if (!ob) must_execute_rest = false;
+
 	        if (entity.x >= (entity.getting_around_obstacle.obstacle.x + entity.getting_around_obstacle.obstacle.width)) {
 
 		    entity.getting_around_obstacle.right = false;
@@ -594,9 +600,7 @@ console.log('entity, right after function executes:', entity)
 
 
 
-*/
-/*
-        if (ob) {
+        if (ob && must_execute_rest) {
 
 	    const layout = game_state.map.layout;
 
@@ -762,14 +766,15 @@ console.log('entity, right after function executes:', entity)
 	    }
 
         }
-*/
+
     }
 
     else if (directions.includes('down')) {
 
         const ob = is_there_obstacle_in_the_way(entity, 'down');
-console.log('ob:', ob)
-/*
+
+	let must_execute_rest = true;
+
 	if (entity.getting_around_obstacle.left) {
 
 	    if (entity.getting_around_obstacle.action_type === 'seeking_entry') {
@@ -789,6 +794,8 @@ console.log('ob:', ob)
 	    }
 
 	    else if (entity.getting_around_obstacle.action_type === 'contouring_perimeter') {
+
+		if (!ob) must_execute_rest = false;
 
 	        if ((entity.x + entity.width) <= entity.getting_around_obstacle.obstacle.x) {
 
@@ -824,6 +831,8 @@ console.log('ob:', ob)
 
 	    else if (entity.getting_around_obstacle.action_type === 'contouring_perimeter') {
 
+		if (!ob) must_execute_rest = false;
+
 	        if (entity.x >= (entity.getting_around_obstacle.obstacle.x + entity.getting_around_obstacle.obstacle.width)) {
 
 		    entity.getting_around_obstacle.right = false;
@@ -840,10 +849,10 @@ console.log('ob:', ob)
 
 	}
 
-*/
 
 
-        if (ob) {
+
+        if (ob && must_execute_rest) {
 console.log('there is ob')
 	    const layout = game_state.map.layout;
 
