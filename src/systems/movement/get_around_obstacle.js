@@ -475,11 +475,20 @@ console.log('entity, right after function executes:', entity)
 
 		let correct_direction;
 
-		if (up_side_blocks_count === down_side_blocks_count) {console.log('ambos lados têm número de blocos iguais');correct_direction = directions.includes('down') ? 'down' : 'up';}
+		let cond1 = (last_up_left_block_row === ob.row && directions.includes('down'));
+		let cond2 = ((last_down_left_block_row === ob.row) && (last_up_left_block_row < ob.row) && directions.includes('up'));
+		let cond3 = (up_side_blocks_count === down_side_blocks_count);
+
+console.log('last_down_left_block_row === ob.row:', last_down_left_block_row === ob.row, 'last_up_left_block_row < ob.row:', last_up_left_block_row < ob.row, 'directions.includes(up):', directions.includes('up'))
+console.log('conds: cond1:', cond1, 'cond2:', cond2, 'cond3:', cond3, 'ob.row:', ob.row, 'directions:', directions)
+
+		if (cond1) correct_direction = 'down';
+
+		else if (cond2) correct_direction = 'down';
 
 		else {console.log('blocos não iguais');correct_direction = up_side_blocks_count < down_side_blocks_count ? 'up' : 'down';}
 
-console.log('correct_direction:', correct_direction, 'up_side_blocks_count:', up_side_blocks_count, 'down_side_blocks_count:', down_side_blocks_count)
+console.log('correct_direction:', correct_direction, 'up_side_blocks_count:', up_side_blocks_count, 'down_side_blocks_count:', down_side_blocks_count, 'ob.row:', ob.row, 'last_up_left_block_row:', last_up_left_block_row, 'last_down_left_block_row:', last_down_left_block_row)
 		if (target_is_inside_structure) {
 
 		    entity.getting_around_obstacle.action_type = 'seeking_entry';
