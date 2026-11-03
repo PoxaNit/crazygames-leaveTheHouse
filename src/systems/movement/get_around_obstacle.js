@@ -328,7 +328,7 @@ console.log('entity, right after function executes:', entity)
 		if (!ob) must_execute_rest = false;
 
 	        if (entity.y >= (entity.getting_around_obstacle.obstacle.y + entity.getting_around_obstacle.obstacle.height)) {
-
+console.info('down > contouring_perimeter, entity.y:', entity.y, '; obstacle:', entity.getting_around_obstacle.obstacle)
 		    entity.getting_around_obstacle.down = false;
 
 		    entity.getting_around_obstacle.action_type = null;
@@ -473,18 +473,34 @@ console.log('entity, right after function executes:', entity)
 //	console.log('directions tem down:', directions.includes('down'))
 
 
+		const going_down = entity.getting_around_obstacle.down;
+
+		const going_up = entity.getting_around_obstacle.up;
+
 		let correct_direction;
 
-		let cond1 = (last_up_left_block_row === ob.row && directions.includes('down'));
-		let cond2 = ((last_down_left_block_row === ob.row) && (last_up_left_block_row < ob.row) && directions.includes('up'));
-		let cond3 = (up_side_blocks_count === down_side_blocks_count);
+		let cond1 = ((last_up_left_block_row === ob.row) && (last_down_left_block_row > ob.row) && directions.includes('up') && !going_down);
+		let cond2 = ((last_down_left_block_row === ob.row) && (last_up_left_block_row < ob.row) && directions.includes('up') && !going_up);
+		let cond3 = ((last_up_left_block_row === ob.row) && (last_down_left_block_row > ob.row) && directions.includes('down') && !going_down);
+		let cond4 = ((last_down_left_block_row === ob.row) && (last_up_left_block_row < ob.row) && directions.includes('down') && !going_up);
+
+		let cond5 = ((last_down_left_block_row === ob.row) && (last_up_left_block_row === ob.row) && directions.includes('down') && !going_up);
+		let cond6 = ((last_down_left_block_row === ob.row) && (last_up_left_block_row === ob.row) && directions.includes('up') && !going_down);
 
 console.log('last_down_left_block_row === ob.row:', last_down_left_block_row === ob.row, 'last_up_left_block_row < ob.row:', last_up_left_block_row < ob.row, 'directions.includes(up):', directions.includes('up'))
 console.log('conds: cond1:', cond1, 'cond2:', cond2, 'cond3:', cond3, 'ob.row:', ob.row, 'directions:', directions)
 
-		if (cond1) correct_direction = 'down';
+		if (cond1) correct_direction = 'up';
 
 		else if (cond2) correct_direction = 'down';
+
+		else if (cond3) correct_direction = 'up';
+
+		else if (cond4) correct_direction = 'down';
+
+		else if (cond5) correct_direction = 'down';
+
+		else if (cond4) correct_direction = 'up';
 
 		else {console.log('blocos não iguais');correct_direction = up_side_blocks_count < down_side_blocks_count ? 'up' : 'down';}
 

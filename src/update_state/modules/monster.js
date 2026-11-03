@@ -268,8 +268,8 @@ console.log('includes up executando...')
 //console.log('saved_direction:', game_state.monster.getting_around_obstacle.active)
 
 		if (!(game_state.monster.getting_around_obstacle.active && game_state.monster.getting_around_obstacle.saved_direction === 'left')) {
-//console.log('movimentação natural: right')
-//console.log('saved_direction: ', game_state.monster.getting_around_obstacle.saved_direction)
+console.error('movimentação natural: right')
+console.error('saved_direction: ', game_state.monster.getting_around_obstacle.saved_direction)
 
 		    move_entity(game_state.monster, 'right');
 
