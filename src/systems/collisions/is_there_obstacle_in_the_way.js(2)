@@ -192,67 +192,61 @@ function is_there_obstacle_in_the_way(
     }
 
     // Movimentação vertical.
+    // Verifica todas as colunas ocupadas pelo corpo da entidade.
     if (
         specific_direction === 'up' ||
         specific_direction === 'down'
     ) {
-        const res_left = check_ray_path(
-            start_row,
-            col_left,
-            target_row,
-            col_left,
-            specific_direction,
-            tile_size,
-            layout,
-            max_rows,
-            max_cols
-        );
+        for (
+            let col = col_left;
+            col <= col_right;
+            col++
+        ) {
+            const res = check_ray_path(
+                start_row,
+                col,
+                target_row,
+                col,
+                specific_direction,
+                tile_size,
+                layout,
+                max_rows,
+                max_cols
+            );
 
-        if (res_left) return res_left;
+            if (res) return res;
+        }
 
-        return check_ray_path(
-            start_row,
-            col_right,
-            target_row,
-            col_right,
-            specific_direction,
-            tile_size,
-            layout,
-            max_rows,
-            max_cols
-        );
+        return null;
     }
 
     // Movimentação horizontal.
+    // Verifica todas as linhas ocupadas pelo corpo da entidade.
     if (
         specific_direction === 'left' ||
         specific_direction === 'right'
     ) {
-        const res_top = check_ray_path(
-            row_top,
-            start_col,
-            row_top,
-            target_col,
-            specific_direction,
-            tile_size,
-            layout,
-            max_rows,
-            max_cols
-        );
+        for (
+            let row = row_top;
+            row <= row_bottom;
+            row++
+        ) {
+            const res = check_ray_path(
+                row,
+                start_col,
+                row,
+                target_col,
+                specific_direction,
+                tile_size,
+                layout,
+                max_rows,
+                max_cols
+            );
 
-        if (res_top) return res_top;
+            if (res) return res;
+        }
 
-        return check_ray_path(
-            row_bottom,
-            start_col,
-            row_bottom,
-            target_col,
-            specific_direction,
-            tile_size,
-            layout,
-            max_rows,
-            max_cols
-        );
+        return null;
     }
 
     // Direção não especificada.

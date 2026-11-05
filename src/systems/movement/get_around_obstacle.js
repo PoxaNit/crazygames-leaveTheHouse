@@ -215,7 +215,42 @@ console.log('entity, right after function executes:', entity)
 						    (target_pos.col >= last_up_left_block_col))
 						   );
 
-		const correct_direction = up_side_blocks_count < down_side_blocks_count ? 'up' : 'down';
+
+
+		const going_down = entity.getting_around_obstacle.down;
+
+		const going_up = entity.getting_around_obstacle.up;
+
+		let correct_direction;
+
+		let cond1 = ((last_up_right_block_row === ob.row) && (last_down_right_block_row > ob.row) && directions.includes('up') && !going_down);
+		let cond2 = ((last_down_right_block_row === ob.row) && (last_up_right_block_row < ob.row) && directions.includes('up') && !going_up);
+		let cond3 = ((last_up_right_block_row === ob.row) && (last_down_right_block_row > ob.row) && directions.includes('down') && !going_down);
+		let cond4 = ((last_down_right_block_row === ob.row) && (last_up_right_block_row < ob.row) && directions.includes('down') && !going_up);
+
+		let cond5 = ((last_down_right_block_row === ob.row) && (last_up_right_block_row === ob.row) && directions.includes('down') && !going_up);
+		let cond6 = ((last_down_right_block_row === ob.row) && (last_up_right_block_row === ob.row) && directions.includes('up') && !going_down);
+
+//console.log('last_down_left_block_row === ob.row:', last_down_left_block_row === ob.row, 'last_up_left_block_row < ob.row:', last_up_left_block_row < ob.row, 'directions.includes(up):', directions.includes('up'))
+//console.log('conds: cond1:', cond1, 'cond2:', cond2, 'cond3:', cond3, 'ob.row:', ob.row, 'directions:', directions)
+
+		if (cond1) correct_direction = 'up';
+
+		else if (cond2) correct_direction = 'down';
+
+		else if (cond3) correct_direction = 'up';
+
+		else if (cond4) correct_direction = 'down';
+
+		else if (cond5) correct_direction = 'down';
+
+		else if (cond6) correct_direction = 'up';
+
+		else {console.log('blocos não iguais');correct_direction = up_side_blocks_count < down_side_blocks_count ? 'up' : 'down';}
+
+//console.log('correct_direction:', correct_direction, 'up_side_blocks_count:', up_side_blocks_count, 'down_side_blocks_count:', down_side_blocks_count, 'ob.row:', ob.row, 'last_up_left_block_row:', last_up_left_block_row, 'last_down_left_block_row:', last_down_left_block_row)
+
+
 
 		if (target_is_inside_structure) {
 
@@ -500,7 +535,7 @@ console.log('conds: cond1:', cond1, 'cond2:', cond2, 'cond3:', cond3, 'ob.row:',
 
 		else if (cond5) correct_direction = 'down';
 
-		else if (cond4) correct_direction = 'up';
+		else if (cond6) correct_direction = 'up';
 
 		else {console.log('blocos não iguais');correct_direction = up_side_blocks_count < down_side_blocks_count ? 'up' : 'down';}
 
@@ -754,7 +789,41 @@ console.log('correct_direction:', correct_direction, 'up_side_blocks_count:', up
 						    (target_pos.row >= last_left_up_block_row))
 						   );
 
-		const correct_direction = left_side_blocks_count < right_side_blocks_count ? 'left' : 'right';
+
+		const going_left = entity.getting_around_obstacle.left;
+
+		const going_right = entity.getting_around_obstacle.right;
+
+		let correct_direction;
+
+		let cond1 = ((last_left_down_block_col === ob.col) && (last_right_down_block_col > ob.col) && directions.includes('left') && !going_right);
+		let cond2 = ((last_right_down_block_col === ob.col) && (last_left_down_block_col < ob.col) && directions.includes('left') && !going_left);
+		let cond3 = ((last_left_down_block_col === ob.col) && (last_right_down_block_col > ob.col) && directions.includes('right') && !going_right);
+		let cond4 = ((last_right_down_block_col === ob.col) && (last_left_down_block_col < ob.col) && directions.includes('right') && !going_left);
+
+		let cond5 = ((last_right_down_block_col === ob.col) && (last_left_down_block_col === ob.col) && directions.includes('right') && !going_left);
+		let cond6 = ((last_right_down_block_col === ob.col) && (last_left_down_block_col === ob.col) && directions.includes('left') && !going_right);
+
+//console.log('last_down_left_block_row === ob.row:', last_down_left_block_row === ob.row, 'last_up_left_block_row < ob.row:', last_up_left_block_row < ob.row, 'directions.includes(up):', directions.includes('up'))
+//console.log('conds: cond1:', cond1, 'cond2:', cond2, 'cond3:', cond3, 'ob.row:', ob.row, 'directions:', directions)
+
+		if (cond1) correct_direction = 'left';
+
+		else if (cond2) correct_direction = 'right';
+
+		else if (cond3) correct_direction = 'left';
+
+		else if (cond4) correct_direction = 'right';
+
+		else if (cond5) correct_direction = 'right';
+
+		else if (cond6) correct_direction = 'left';
+
+		else {console.log('blocos não iguais');correct_direction = left_side_blocks_count < right_side_blocks_count ? 'left' : 'right';}
+
+//console.log('correct_direction:', correct_direction, 'up_side_blocks_count:', up_side_blocks_count, 'down_side_blocks_count:', down_side_blocks_count, 'ob.row:', ob.row, 'last_up_left_block_row:', last_up_left_block_row, 'last_down_left_block_row:', last_down_left_block_row)
+
+
 
 		if (target_is_inside_structure) {
 
@@ -764,7 +833,7 @@ console.log('correct_direction:', correct_direction, 'up_side_blocks_count:', up
 
 		    if (correct_direction === 'left') entity.getting_around_obstacle.saved_direction = 'left';
 
-		    else if (correct_direction === 'right') entity.getting_around_obstacle.saved_direction = 'right';
+		    else if (correct_direction === 'right') {console.info('up > target inside, correct_direction:', correct_direction);entity.getting_around_obstacle.saved_direction = 'right';}
 
 
 		    return correct_direction;
@@ -790,7 +859,7 @@ console.log('correct_direction:', correct_direction, 'up_side_blocks_count:', up
 
 		    if (correct_direction === 'left') entity.getting_around_obstacle.saved_direction = 'left';
 
-		    else if (correct_direction === 'right') entity.getting_around_obstacle.saved_direction = 'right';
+		    else if (correct_direction === 'right') {console.info('up > target outside, correct_direction:', correct_direction);entity.getting_around_obstacle.saved_direction = 'right';}
 
 		    return correct_direction;
 
@@ -931,7 +1000,7 @@ console.log('there is ob')
 		right_side_blocks_count++;
 
 		last_right_up_block_col = i;
-
+console.info('last_right_up_block_col:', last_right_up_block_col, 'entity.x + entity.width:', entity.x + entity.width, 'entity.getting_around_obstacle.obstacle.x:', entity.getting_around_obstacle.obstacle.x)
 		structure_width_up++;
 
 	    }
@@ -1009,7 +1078,42 @@ console.log('there is ob')
 						    (target_pos.row <= last_left_down_block_row))
 						   );
 
-		const correct_direction = left_side_blocks_count < right_side_blocks_count ? 'left' : 'right';
+
+		const going_left = entity.getting_around_obstacle.left;
+
+		const going_right = entity.getting_around_obstacle.right;
+
+		let correct_direction;
+
+		let cond1 = ((last_left_up_block_col === ob.col) && (last_right_up_block_col > ob.col) && directions.includes('left') && !going_right);
+		let cond2 = ((last_right_up_block_col === ob.col) && (last_left_up_block_col < ob.col) && directions.includes('left') && !going_left);
+		let cond3 = ((last_left_up_block_col === ob.col) && (last_right_up_block_col > ob.col) && directions.includes('right') && !going_right);
+		let cond4 = ((last_right_up_block_col === ob.col) && (last_left_up_block_col < ob.col) && directions.includes('right') && !going_left);
+
+		let cond5 = ((last_right_up_block_col === ob.col) && (last_left_up_block_col === ob.col) && directions.includes('right') && !going_left);
+		let cond6 = ((last_right_up_block_col === ob.col) && (last_left_up_block_col === ob.col) && directions.includes('left') && !going_right);
+console.info('ob:', ob)
+console.info('last_right_up_block_col === ob.col:', last_right_up_block_col === ob.col, 'last_left_up_block_col === ob.col', last_left_up_block_col === ob.col, 'last_right_up_block_col:', last_right_up_block_col, 'last_left_up_block_col:', last_left_up_block_col, 'ob.col:', ob.col)
+//console.log('last_down_left_block_row === ob.row:', last_down_left_block_row === ob.row, 'last_up_left_block_row < ob.row:', last_up_left_block_row < ob.row, 'directions.includes(up):', directions.includes('up'))
+//console.log('conds: cond1:', cond1, 'cond2:', cond2, 'cond3:', cond3, 'ob.row:', ob.row, 'directions:', directions)
+console.info('down > donds: cond2:', cond2,'cond4:', cond4, 'cond5:', cond5)
+		if (cond1) correct_direction = 'left';
+
+		else if (cond2) correct_direction = 'right';
+
+		else if (cond3) correct_direction = 'left';
+
+		else if (cond4) correct_direction = 'right';
+
+		else if (cond5) correct_direction = 'right';
+
+		else if (cond6) correct_direction = 'left';
+
+		else {console.log('blocos não iguais');correct_direction = left_side_blocks_count < right_side_blocks_count ? 'left' : 'right';}
+
+//console.log('correct_direction:', correct_direction, 'up_side_blocks_count:', up_side_blocks_count, 'down_side_blocks_count:', down_side_blocks_count, 'ob.row:', ob.row, 'last_up_left_block_row:', last_up_left_block_row, 'last_down_left_block_row:', last_down_left_block_row)
+
+
 
 		if (target_is_inside_structure) {
 console.log('target is inside structure')
@@ -1019,7 +1123,7 @@ console.log('target is inside structure')
 
 		    if (correct_direction === 'left') entity.getting_around_obstacle.saved_direction = 'left';
 
-		    else if (correct_direction === 'right') entity.getting_around_obstacle.saved_direction = 'right';
+		    else if (correct_direction === 'right') {console.info('down > target inside, correct_direction:', correct_direction);entity.getting_around_obstacle.saved_direction = 'right';}
 
 
 		    return correct_direction;
@@ -1043,7 +1147,7 @@ console.log('entity after assignment:', entity)
 
 		    if (correct_direction === 'left') entity.getting_around_obstacle.saved_direction = 'left';
 
-		    else if (correct_direction === 'right') entity.getting_around_obstacle.saved_direction = 'right';
+		    else if (correct_direction === 'right') {console.info('down > target outside, correct_direction:', correct_direction);entity.getting_around_obstacle.saved_direction = 'right';}
 
 		    return correct_direction;
 

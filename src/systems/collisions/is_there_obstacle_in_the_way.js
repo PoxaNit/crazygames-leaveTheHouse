@@ -1,12 +1,36 @@
 
 import game_state from '../../game_state/game_state.js';
 
+function get_obstacle(row, col, tile_size, layout, max_rows, max_cols) {
+    if (
+        row < 0 ||
+        row >= max_rows ||
+        col < 0 ||
+        col >= max_cols
+    ) {
+        return null;
+    }
+
+    if (layout[row]?.[col] !== 1) {
+        return null;
+    }
+
+    return {
+        hit: true,
+        axis: null,
+        row,
+        col,
+        x: col * tile_size,
+        y: row * tile_size
+    };
+}
+
+// Verificação automática original, sem direção especificada.
 function check_ray_path(
     start_row,
     start_col,
     target_row,
     target_col,
-    specific_direction,
     tile_size,
     layout,
     max_rows,
@@ -20,43 +44,35 @@ function check_ray_path(
 
     let current_row = start_row;
     let current_col = start_col;
-
-    let movement_type =
-        (specific_direction === 'up' || specific_direction === 'down')
-            ? 'vertical'
-            : 'horizontal';
+    let movement_type;
 
     while (
         current_row !== target_row ||
         current_col !== target_col
     ) {
-        if (specific_direction === null) {
-            if (
-                current_row !== target_row &&
-                (current_col === target_col || d_row > d_col)
-            ) {
-                current_row += step_row;
-                movement_type = 'vertical';
-            } else if (current_col !== target_col) {
-                current_col += step_col;
-                movement_type = 'horizontal';
-            }
-        } else if (
-            specific_direction === 'up' ||
-            specific_direction === 'down'
+        if (
+            current_row !== target_row &&
+            (current_col === target_col || d_row > d_col)
         ) {
-            if (current_row === target_row) break;
-
-            current_row += specific_direction === 'up' ? -1 : 1;
+            current_row += step_row;
             movement_type = 'vertical';
-        } else if (
-            specific_direction === 'left' ||
-            specific_direction === 'right'
-        ) {
-            if (current_col === target_col) break;
-
-            current_col += specific_direction === 'left' ? -1 : 1;
+        } else if (current_col !== target_col) {
+            current_col += step_col;
             movement_type = 'horizontal';
+        }
+
+        const obstacle = get_obstacle(
+            current_row,
+            current_col,
+            tile_size,
+            layout,
+            max_rows,
+            max_cols
+        );
+
+        if (obstacle) {
+            obstacle.axis = movement_type;
+            return obstacle;
         }
 
         if (
@@ -67,17 +83,171 @@ function check_ray_path(
         ) {
             break;
         }
+    }
 
-        if (layout[current_row]?.[current_col] === 1) {
-            return {
-                hit: true,
-                axis: movement_type,
-                row: current_row,
-                col: current_col,
-                x: current_col * tile_size,
-                y: current_row * tile_size
-            };
+    return null;
+}
+
+// Verificação direcional considerando todo o corpo da entidade.
+function check_directional_path(
+    entity,
+    target_area,
+    direction,
+    tile_size,
+    layout,
+    max_rows,
+    max_cols
+) {
+    const epsilon = 0.000001;
+
+    const entity_left = entity.x;
+    const entity_right = entity.x + entity.width;
+    const entity_top = entity.y;
+    const entity_bottom = entity.y + entity.height;
+
+    const target_left = target_area.x;
+    const target_right = target_area.x + target_area.width;
+    const target_top = target_area.y;
+    const target_bottom = target_area.y + target_area.height;
+
+    const col_left = Math.floor(entity_left / tile_size);
+    const col_right = Math.floor(
+        (entity_right - epsilon) / tile_size
+    );
+
+    const row_top = Math.floor(entity_top / tile_size);
+    const row_bottom = Math.floor(
+        (entity_bottom - epsilon) / tile_size
+    );
+
+    // DOWN: percorre exclusivamente de cima para baixo.
+    if (direction === 'down') {
+        if (target_top < entity_bottom) {
+            return null;
         }
+
+        const first_row =
+            Math.floor((entity_bottom - epsilon) / tile_size) + 1;
+
+        const last_row =
+            Math.floor((target_top - epsilon) / tile_size);
+
+        for (let row = first_row; row <= last_row; row++) {
+            for (let col = col_left; col <= col_right; col++) {
+                const obstacle = get_obstacle(
+                    row,
+                    col,
+                    tile_size,
+                    layout,
+                    max_rows,
+                    max_cols
+                );
+
+                if (obstacle) {
+                    obstacle.axis = 'vertical';
+                    return obstacle;
+                }
+            }
+        }
+
+        return null;
+    }
+
+    // UP: percorre exclusivamente de baixo para cima.
+    if (direction === 'up') {
+        if (target_bottom > entity_top) {
+            return null;
+        }
+
+        const first_row = Math.floor(entity_top / tile_size) - 1;
+
+        const last_row =
+            Math.floor((target_bottom - epsilon) / tile_size);
+
+        for (let row = first_row; row >= last_row; row--) {
+            for (let col = col_left; col <= col_right; col++) {
+                const obstacle = get_obstacle(
+                    row,
+                    col,
+                    tile_size,
+                    layout,
+                    max_rows,
+                    max_cols
+                );
+
+                if (obstacle) {
+                    obstacle.axis = 'vertical';
+                    return obstacle;
+                }
+            }
+        }
+
+        return null;
+    }
+
+    // RIGHT: percorre exclusivamente da esquerda para a direita.
+    if (direction === 'right') {
+        if (target_left < entity_right) {
+            return null;
+        }
+
+        const first_col =
+            Math.floor((entity_right - epsilon) / tile_size) + 1;
+
+        const last_col =
+            Math.floor((target_left - epsilon) / tile_size);
+
+        for (let col = first_col; col <= last_col; col++) {
+            for (let row = row_top; row <= row_bottom; row++) {
+                const obstacle = get_obstacle(
+                    row,
+                    col,
+                    tile_size,
+                    layout,
+                    max_rows,
+                    max_cols
+                );
+
+                if (obstacle) {
+                    obstacle.axis = 'horizontal';
+                    return obstacle;
+                }
+            }
+        }
+
+        return null;
+    }
+
+    // LEFT: percorre exclusivamente da direita para a esquerda.
+    if (direction === 'left') {
+        if (target_right > entity_left) {
+            return null;
+        }
+
+        const first_col = Math.floor(entity_left / tile_size) - 1;
+
+        const last_col =
+            Math.floor((target_right - epsilon) / tile_size);
+
+        for (let col = first_col; col >= last_col; col--) {
+            for (let row = row_top; row <= row_bottom; row++) {
+                const obstacle = get_obstacle(
+                    row,
+                    col,
+                    tile_size,
+                    layout,
+                    max_rows,
+                    max_cols
+                );
+
+                if (obstacle) {
+                    obstacle.axis = 'horizontal';
+                    return obstacle;
+                }
+            }
+        }
+
+        return null;
     }
 
     return null;
@@ -114,19 +284,7 @@ function is_there_obstacle_in_the_way(
         (entity.x + entity.width / 2) / tile_size
     );
 
-    const row_top = Math.floor(entity.y / tile_size);
-
-    const row_bottom = Math.floor(
-        (entity.y + entity.height - 1) / tile_size
-    );
-
-    const col_left = Math.floor(entity.x / tile_size);
-
-    const col_right = Math.floor(
-        (entity.x + entity.width - 1) / tile_size
-    );
-
-    // Verificação do obstáculo que a entidade está contornando.
+    // Preserva a memória do obstáculo que está sendo contornado.
     const obstacle = entity.getting_around_obstacle?.obstacle;
 
     if (obstacle) {
@@ -192,71 +350,30 @@ function is_there_obstacle_in_the_way(
         }
     }
 
-    // Movimentação vertical.
-    // Verifica todas as colunas ocupadas pelo corpo da entidade.
+    // Verificação direcional.
     if (
         specific_direction === 'up' ||
-        specific_direction === 'down'
-    ) {
-        for (
-            let col = col_left;
-            col <= col_right;
-            col++
-        ) {
-            const res = check_ray_path(
-                start_row,
-                col,
-                target_row,
-                col,
-                specific_direction,
-                tile_size,
-                layout,
-                max_rows,
-                max_cols
-            );
-
-            if (res) return res;
-        }
-
-        return null;
-    }
-
-    // Movimentação horizontal.
-    // Verifica todas as linhas ocupadas pelo corpo da entidade.
-    if (
+        specific_direction === 'down' ||
         specific_direction === 'left' ||
         specific_direction === 'right'
     ) {
-        for (
-            let row = row_top;
-            row <= row_bottom;
-            row++
-        ) {
-            const res = check_ray_path(
-                row,
-                start_col,
-                row,
-                target_col,
-                specific_direction,
-                tile_size,
-                layout,
-                max_rows,
-                max_cols
-            );
-
-            if (res) return res;
-        }
-
-        return null;
+        return check_directional_path(
+            entity,
+            entity.target_area,
+            specific_direction,
+            tile_size,
+            layout,
+            max_rows,
+            max_cols
+        );
     }
 
-    // Direção não especificada.
+    // Detecção automática original.
     return check_ray_path(
         start_row,
         start_col,
         target_row,
         target_col,
-        null,
         tile_size,
         layout,
         max_rows,
