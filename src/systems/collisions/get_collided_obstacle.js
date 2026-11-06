@@ -45,9 +45,9 @@ function get_collided_obstacle(entity, direction = null) {
     // Find the first corner hitting a wall (type 1)
     for (let i = 0; i < check_points.length; i++) {
         const tile = check_points[i];
-        if (tile.type === 1) {
+        if (game_state.solid_tiles.includes(tile.type)) {
             return {
-                type: 1,
+                type: tile.type,
                 row: tile.row,
                 col: tile.col,
                 x: tile.col * tile_size,

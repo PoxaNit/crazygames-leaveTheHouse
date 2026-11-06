@@ -9,17 +9,7 @@ import creaky_floor_drawer from './creaky_floor_drawer/creaky_floor_drawer.js';
 
 function draw () {
 
-//    floor();
-
-//    obstacles_drawer();
-
     map_drawer();
-
-//    door_drawer();
-
-  //  coins_drawer();
-
-    creaky_floor_drawer();
 
     monster_drawer();
 

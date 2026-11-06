@@ -15,7 +15,7 @@ function start_game () {
 
     const standard_game_state = {
       game_running: true,
-      solid_tiles: [1], // to define obstacles
+      solid_tiles: [1, 6, 7], // to define obstacles
       time: {
 	last_frame_time: performance.now(),
 	delta_time: 0,

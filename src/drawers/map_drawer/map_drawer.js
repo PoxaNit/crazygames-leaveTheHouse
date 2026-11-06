@@ -56,6 +56,47 @@ function map_drawer() {
 	    if (tile_type === 5) {
     		ctx.drawImage(sprite_floor, screen_x, screen_y, tile_size, tile_size);
 	    }
+
+	    if (tile_type === 6) {
+                ctx.save();
+                ctx.fillStyle = 'white';
+                
+                // Desenha o bloco branco cravado no grid acompanhando os eixos da câmera
+                ctx.fillRect(screen_x, screen_y, tile_size, tile_size);
+                
+                ctx.restore();
+            }
+
+	    if (tile_type === 7) {
+                ctx.save();
+                ctx.fillStyle = 'white';
+                
+                // Desenha o bloco branco cravado no grid acompanhando os eixos da câmera
+                ctx.fillRect(screen_x, screen_y, tile_size, tile_size);
+                
+                ctx.restore();
+            }
+
+	    if (tile_type === 8) {
+                ctx.save();
+                ctx.fillStyle = 'yellow';
+                
+                // Desenha o bloco branco cravado no grid acompanhando os eixos da câmera
+                ctx.fillRect(screen_x, screen_y, tile_size, tile_size);
+                
+                ctx.restore();
+            }
+
+	    if (tile_type === 9) {
+                ctx.save();
+                ctx.fillStyle = 'yellow';
+                
+                // Desenha o bloco branco cravado no grid acompanhando os eixos da câmera
+                ctx.fillRect(screen_x, screen_y, tile_size, tile_size);
+                
+                ctx.restore();
+            }
+
         }
     }
 }
