@@ -13,6 +13,7 @@ function start_game () {
 
     const standard_game_state = {
       game_running: true,
+      solid_tiles: [1], // to define obstacles
       time: {
 	last_frame_time: performance.now(),
 	delta_time: 0,
@@ -39,8 +40,9 @@ function start_game () {
         width: 32,
         height: 32,
 	base_velocity: 3,
-        velocity: 3,
+        velocity: 6,
 	running_velocity: 7,
+	movement_type: 'pathfinding', // defines how to move entity on the map. values: [pathfinding, contextual_navigation]
 	getting_around_obstacle: {
 	  active: false,
 	  left: false,
@@ -99,7 +101,7 @@ function start_game () {
 	    width: 0,
 	    height: 0
 	  },
-	  nodes: []
+	  path: []
 	},
         state: {
           action: 'walking',

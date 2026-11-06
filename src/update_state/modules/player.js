@@ -115,27 +115,25 @@ function player () {
 
 	game_state.monster.state.task = 'chasing';
 
-	game_state.monster.target_area = {
-          active: true,
-	  type: 'player',
-          x: game_state.player.x,
-          y: game_state.player.y,
-	  width: game_state.player.width,
-	  height: game_state.player.height,
-	  next_move: {}
-        }
+        game_state.monster.target_area.active = true;
+	game_state.monster.target_area.type = 'player';
+        game_state.monster.target_area.x = game_state.player.x;
+        game_state.monster.target_area.y = game_state.player.y;
+	game_state.monster.target_area.width = game_state.player.width;
+	game_state.monster.target_area.height = game_state.player.height;
 
     } else {
 
-	if (game_state.monster.target_area.type === 'player') game_state.monster.target_area = {
-            active: true,
-	    type: 'last_player_position',
-            x: game_state.player.x,
-            y: game_state.player.y,
-	    width: game_state.player.width,
-	    height: game_state.player.height,
-	    next_move: {}
-	};
+	if (game_state.monster.target_area.type === 'player') {
+
+            game_state.monster.target_area.active = true;
+	    game_state.monster.target_area.type = 'last_player_position';
+            game_state.monster.target_area.x = game_state.player.x;
+            game_state.monster.target_area.y = game_state.player.y;
+	    game_state.monster.target_area.width = game_state.player.width;
+	    game_state.monster.target_area.height = game_state.player.height;
+
+	}
 
     }
 
