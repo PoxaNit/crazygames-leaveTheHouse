@@ -11,6 +11,8 @@ function start_game () {
 
     game_message.textContent = '';
 
+    const map_copy = structuredClone(map);
+
     const standard_game_state = {
       game_running: true,
       solid_tiles: [1], // to define obstacles
@@ -20,7 +22,7 @@ function start_game () {
 	patrol_timer: 0
       },
       assets: assets,
-      map: map,
+      map: map_copy,
       player: {
         x: 70,
         y: 80,
@@ -95,12 +97,6 @@ function start_game () {
 	  y: 0,
 	  width: 0,
 	  height: 0,
-	  next_move: { // next area the monster has to go in order to get closer to the target area (final destiny)
-	    x: 0,
-	    y: 0,
-	    width: 0,
-	    height: 0
-	  },
 	  path: []
 	},
         state: {
@@ -109,26 +105,7 @@ function start_game () {
 	  task: 'patrolling'
         }
       },
-      coins: [
-	{
-	  x: 60,
-	  y: 40,
-	  width:10,
-	  height: 10
-	},
-	{
-	  x: 600,
-	  y: 288,
-	  width:10,
-	  height: 10
-	},
-	{
-	  x: 370,
-	  y: 310,
-	  width:10,
-	  height: 10
-	}
-      ],
+      keys: null,
       obstacles: [],
       bells: [
 	{

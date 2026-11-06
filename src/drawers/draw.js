@@ -5,7 +5,7 @@ import obstacles_drawer from './obstacles_drawer/obstacles_drawer.js';
 import monster_drawer from './monster_drawer/monster_drawer.js';
 import door_drawer from './door_drawer/door_drawer.js';
 import coins_drawer from './coins_drawer/coins_drawer.js';
-import bells_drawer from './bells_drawer/bells_drawer.js';
+import creaky_floor_drawer from './creaky_floor_drawer/creaky_floor_drawer.js';
 
 function draw () {
 
@@ -19,7 +19,7 @@ function draw () {
 
   //  coins_drawer();
 
-    //bells_drawer();
+    creaky_floor_drawer();
 
     monster_drawer();
 

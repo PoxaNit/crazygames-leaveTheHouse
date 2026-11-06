@@ -52,6 +52,10 @@ function map_drawer() {
                     item_size
                 );
             }
+
+	    if (tile_type === 5) {
+    		ctx.drawImage(sprite_floor, screen_x, screen_y, tile_size, tile_size);
+	    }
         }
     }
 }
