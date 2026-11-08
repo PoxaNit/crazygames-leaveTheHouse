@@ -121,6 +121,8 @@ function player () {
         game_state.monster.target_area.y = game_state.player.y;
 	game_state.monster.target_area.width = game_state.player.width;
 	game_state.monster.target_area.height = game_state.player.height;
+	game_state.monster.velocity = game_state.monster.running_velocity;
+	game_state.time.last_player_position_timer = 0;
 
     } else {
 
@@ -131,7 +133,8 @@ function player () {
             game_state.monster.target_area.x = game_state.player.x;
             game_state.monster.target_area.y = game_state.player.y;
 	    game_state.monster.target_area.width = game_state.player.width;
-	    game_state.monster.target_area.height = game_state.player.height;
+	    game_state.monster.velocity = game_state.monster.running_velocity;
+	    game_state.time.last_player_position_timer = 0;
 
 	}
 

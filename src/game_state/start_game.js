@@ -19,32 +19,34 @@ function start_game () {
       time: {
 	last_frame_time: performance.now(),
 	delta_time: 0,
-	patrol_timer: 0
+	patrol_timer: 0,
+	last_player_position_timer: 0
       },
       assets: assets,
       map: map_copy,
       player: {
-        x: 70,
-        y: 80,
+        x: 32 * 3,
+        y: 32 * 3,
         width: 32,
         height: 32,
-	base_velocity: 2,
-        velocity: 2,
-	running_velocity: 6,
+	base_velocity: 1.5,
+        velocity: 1.5,
+	running_velocity: 4,
 	state: {
 	  action: 'standing',
 	  directions: []
 	}
       },
       monster: {
-        x: 600,
-        y: 260,
+        x: 32 * 58,
+        y: 32 * 16,
         width: 32,
         height: 32,
 	base_velocity: 3,
-        velocity: 6,
-	running_velocity: 7,
+        velocity: 3,
+	running_velocity: 6,
 	movement_type: 'pathfinding', // defines how to move entity on the map. values: [pathfinding, contextual_navigation]
+	patrol_tiles: null, // [{row: 0, col: 0, x: 0, y: 0}, ...]
 	getting_around_obstacle: {
 	  active: false,
 	  left: false,
@@ -60,36 +62,6 @@ function start_game () {
 	  },
 	  action_type: null // seeking_entry / contouring_perimeter / escaping_compartiment
 	},
-	patrol_areas: [
-	  {
-	    monster_is_in: false,
-	    x: 0,
-	    y: 0,
-	    width: 30,
-	    height: 30
-	  },
-	  {
-	    monster_is_in: false,
-	    x: 0,
-	    y: 420,
-	    width: 30,
-	    height: 30
-	  },
-	  {
-	    monster_is_in: false,
-	    x: 770,
-	    y: 0,
-	    width: 30,
-	    height: 30
-	  },
-	  {
-	    monster_is_in: false,
-	    x: 770,
-	    y: 420,
-	    width: 30,
-	    height: 30
-	  }
-	],
 	target_area: {
 	  active:  false,
 	  type: '',

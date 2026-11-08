@@ -16,7 +16,7 @@ function update_state () {
 
     monster();
 
-//    patrol_areas();
+    patrol_areas();
 
     player();
 

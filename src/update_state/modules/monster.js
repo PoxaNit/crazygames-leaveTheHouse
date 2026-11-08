@@ -21,7 +21,9 @@ function monster () {
 
         const h = game_state.monster.target_area.height;
 
-        if (entity_is_in_area(game_state.monster, x, y, w, h)) {
+	game_state.time.last_player_position_timer += game_state.time.delta_time;
+
+        if (entity_is_in_area(game_state.monster, x, y, w, h) && game_state.time.last_player_position_timer >= 10.0) {
 
             game_state.monster.state.task = 'patrolling';
 
