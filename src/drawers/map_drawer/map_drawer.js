@@ -12,6 +12,8 @@ function map_drawer() {
     const sprite_wall = game_state.assets?.sprites?.wall;
     const sprite_key = game_state.assets?.sprites?.key; // Sua imagem real da chave!
     const sprite_carpet_sheet = game_state.assets?.sprites?.carpet;
+    const sprite_cactus = game_state.assets?.sprites?.cactus;
+    const sprite_table_sheet = game_state.assets?.sprites?.table;
 
     // 🌟 TRAVA DE SEGURANÇA ASSÍNCRONA: Garante que os 3 blocos básicos estão carregados na RAM
     if (!sprite_floor || !sprite_wall || !sprite_key || !sprite_carpet_sheet) return;
@@ -106,6 +108,20 @@ function map_drawer() {
                 ctx.drawImage(
                     sprite_carpet_sheet,
                     sx, 0, tile_size, tile_size,
+                    screen_x, screen_y, tile_size, tile_size
+                );
+            }
+
+	    if (tile_type === 14) ctx.drawImage(sprite_cactus, screen_x, screen_y, tile_size, tile_size);
+
+	    if (tile_type >= 15 && tile_type <= 23) {
+                const table_index = tile_type - 15;
+                const sx = (table_index % 3) * tile_size;
+                const sy = Math.floor(table_index / 3) * tile_size;
+
+                ctx.drawImage(
+                    sprite_table_sheet,
+                    sx, sy, tile_size, tile_size,
                     screen_x, screen_y, tile_size, tile_size
                 );
             }

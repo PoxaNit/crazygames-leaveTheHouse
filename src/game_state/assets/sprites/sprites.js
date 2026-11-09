@@ -4,7 +4,9 @@ let sprites = {
   player: null,
   wall: null,
   key: null,
-  carpet: null
+  carpet: null,
+  cactus: null,
+  table: null
 }
 
 export default sprites;
