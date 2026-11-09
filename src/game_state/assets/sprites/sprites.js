@@ -3,7 +3,8 @@ let sprites = {
   amanda: null, // (monster)
   player: null,
   wall: null,
-  key: null
+  key: null,
+  carpet: null
 }
 
 export default sprites;

@@ -327,16 +327,21 @@ function run_pathfinding(entity) {
         return;
     }
 
-    // Determina os dois eixos independentemente
-    const horizontal_direction =
-        Math.abs(diff_x) > tolerance
-            ? (diff_x > 0 ? 'right' : 'left')
-            : null;
 
-    const vertical_direction =
-        Math.abs(diff_y) > tolerance
-            ? (diff_y > 0 ? 'down' : 'up')
-            : null;
+    // Determina os dois eixos independentemente e faz o snap do eixo já alinhado
+    let horizontal_direction = null;
+    if (Math.abs(diff_x) > tolerance) {
+        horizontal_direction = diff_x > 0 ? 'right' : 'left';
+    } else if (diff_x !== 0 && can_occupy_position(target_x, entity.y)) {
+        entity.x = target_x;
+    }
+
+    let vertical_direction = null;
+    if (Math.abs(diff_y) > tolerance) {
+        vertical_direction = diff_y > 0 ? 'down' : 'up';
+    } else if (diff_y !== 0 && can_occupy_position(entity.x, target_y)) {
+        entity.y = target_y;
+    }
 
     // Verifica se a diagonal é segura para o próximo movimento.
     const velocity = entity.velocity;

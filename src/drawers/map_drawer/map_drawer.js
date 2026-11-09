@@ -11,9 +11,10 @@ function map_drawer() {
     const sprite_floor = game_state.assets?.sprites?.floor;
     const sprite_wall = game_state.assets?.sprites?.wall;
     const sprite_key = game_state.assets?.sprites?.key; // Sua imagem real da chave!
+    const sprite_carpet_sheet = game_state.assets?.sprites?.carpet;
 
     // 🌟 TRAVA DE SEGURANÇA ASSÍNCRONA: Garante que os 3 blocos básicos estão carregados na RAM
-    if (!sprite_floor || !sprite_wall || !sprite_key) return;
+    if (!sprite_floor || !sprite_wall || !sprite_key || !sprite_carpet_sheet) return;
 
     for (let r = 0; r < game_state.map.rows; r++) {
 
@@ -95,6 +96,18 @@ function map_drawer() {
                 ctx.fillRect(screen_x, screen_y, tile_size, tile_size);
                 
                 ctx.restore();
+            }
+
+            // 2. Tapete por tile específico (11 = Esquerda, 12 = Meio, 13 = Direita)
+            if (tile_type === 11 || tile_type === 12 || tile_type === 13) {
+                const sprite_index = tile_type - 11; // 11->0 (0px), 12->1 (32px), 13->2 (64px)
+                const sx = sprite_index * tile_size;
+
+                ctx.drawImage(
+                    sprite_carpet_sheet,
+                    sx, 0, tile_size, tile_size,
+                    screen_x, screen_y, tile_size, tile_size
+                );
             }
 
         }
