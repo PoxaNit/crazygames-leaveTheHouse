@@ -83,14 +83,16 @@ function run_pathfinding(entity) {
         return solids.includes(tile.type);
     }
 
-    function can_occupy_position(x, y) {
-        const right = x + entity.width - epsilon;
-        const bottom = y + entity.height - epsilon;
+    function can_occupy_position(x, y, padding = 0) {
+	const left = x - padding;
+        const top = y - padding;
+	const right = x + entity.width + padding - epsilon;
+        const bottom = y + entity.height + padding - epsilon;
 
         const corners = [
-            [x, y],
-            [right, y],
-            [x, bottom],
+            [left, top],
+            [right, top],
+            [left, bottom],
             [right, bottom]
         ];
 
@@ -349,10 +351,13 @@ function run_pathfinding(entity) {
         (vertical_direction === 'down' ? velocity :
          vertical_direction === 'up' ? -velocity : 0);
 
+    const prev_x = entity.x;
+    const prev_y = entity.y;
+
     const diagonal_safe =
         horizontal_direction &&
         vertical_direction &&
-        can_occupy_position(next_x, next_y);
+        can_occupy_position(next_x, next_y, 1);
 
     if (diagonal_safe) {
         move_entity(entity, horizontal_direction);
@@ -372,6 +377,11 @@ function run_pathfinding(entity) {
         ) {
             move_entity(entity, vertical_direction);
         }
+    }
+
+    // Se ela tinha um destino ativo mas não saiu do lugar, limpa a rota para recalcular
+    if (entity.x === prev_x && entity.y === prev_y) {
+        entity.target_area.path = [];
     }
 }
 
