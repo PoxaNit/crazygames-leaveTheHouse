@@ -4,6 +4,7 @@ import key from './key/key.js';
 import carpet from './carpet/carpet.js';
 import cactus from './plants/cactus/cactus.js';
 import table from './table/table.js';
+import chair from './chair/chair.js';
 
 async function load_sprites () {
 
@@ -18,6 +19,8 @@ async function load_sprites () {
     await cactus();
 
     await table();
+
+    await chair();
 
 }
 

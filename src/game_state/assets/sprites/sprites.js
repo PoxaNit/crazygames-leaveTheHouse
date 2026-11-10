@@ -6,7 +6,8 @@ let sprites = {
   key: null,
   carpet: null,
   cactus: null,
-  table: null
+  table: null,
+  chair: null
 }
 
 export default sprites;
