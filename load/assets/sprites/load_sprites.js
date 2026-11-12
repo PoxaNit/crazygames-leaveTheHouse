@@ -5,6 +5,8 @@ import carpet from './carpet/carpet.js';
 import cactus from './plants/cactus/cactus.js';
 import table from './table/table.js';
 import chair from './chair/chair.js';
+import door from './door/door.js';
+import bed from './bed/bed.js';
 
 async function load_sprites () {
 
@@ -21,6 +23,10 @@ async function load_sprites () {
     await table();
 
     await chair();
+
+    await door();
+
+    await bed();
 
 }
 
