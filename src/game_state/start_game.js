@@ -15,7 +15,7 @@ function start_game () {
 
     const standard_game_state = {
       game_running: true,
-      solid_tiles: [1, 6, 7, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34], // to define obstacles
+      solid_tiles: [1, 6, 7, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38], // to define obstacles
       time: {
 	last_frame_time: performance.now(),
 	delta_time: 0,
@@ -29,8 +29,8 @@ function start_game () {
         y: 32 * 3,
         width: 32,
         height: 32,
-	base_velocity: 1.5,
-        velocity: 1.5,
+	base_velocity: 10,
+        velocity: 10,
 	running_velocity: 4,
 	state: {
 	  action: 'standing',

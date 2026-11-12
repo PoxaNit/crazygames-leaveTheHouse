@@ -9,7 +9,8 @@ let sprites = {
   table: null,
   chair: null,
   door: null,
-  bed: null
+  bed: null,
+  stove: null
 }
 
 export default sprites;

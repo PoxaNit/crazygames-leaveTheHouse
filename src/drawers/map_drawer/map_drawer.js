@@ -17,7 +17,7 @@ function map_drawer() {
     const sprite_chair_sheet = game_state.assets?.sprites?.chair;
     const sprite_door_sheet = game_state.assets?.sprites?.door;
     const sprite_bed_sheet = game_state.assets?.sprites?.bed;
-
+    const sprite_stove_sheet = game_state.assets?.sprites?.stove;
 
     if (
         !sprite_floor ||
@@ -28,7 +28,7 @@ function map_drawer() {
         !sprite_table_sheet ||
         !sprite_chair_sheet ||
         !sprite_door_sheet ||
-	!sprite_bed_sheet
+        !sprite_bed_sheet
     ) return;
 
     for (let r = 0; r < game_state.map.rows; r++) {
@@ -142,6 +142,25 @@ function map_drawer() {
 
                 ctx.drawImage(
                     sprite_bed_sheet,
+                    sx, sy, tile_size, tile_size,
+                    screen_x, screen_y, tile_size, tile_size
+                );
+            }
+
+            if (tile_type >= 35 && tile_type <= 38 && sprite_stove_sheet) {
+                const stove_coords = {
+                    35: { col: 1, row: 0 },
+                    36: { col: 0, row: 1 },
+                    37: { col: 1, row: 1 },
+                    38: { col: 2, row: 1 }
+                };
+
+                const coords = stove_coords[tile_type];
+                const sx = coords.col * tile_size;
+                const sy = coords.row * tile_size;
+
+                ctx.drawImage(
+                    sprite_stove_sheet,
                     sx, sy, tile_size, tile_size,
                     screen_x, screen_y, tile_size, tile_size
                 );
