@@ -42,11 +42,15 @@ function monster () {
 	(game_state.monster.y + game_state.monster.height) > game_state.player.y
     ) {
 
-	game_state.game_running = false;
-
-	game_message.textContent = 'Game Over!';
+	game_state.monster.state.action = 'captured_player';
 
     };
+
+    if (game_state.monster.state.action === 'captured_player') {
+
+	
+
+    }
 
 }
 

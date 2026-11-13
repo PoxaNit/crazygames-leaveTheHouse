@@ -364,9 +364,12 @@ function run_pathfinding(entity) {
         vertical_direction &&
         can_occupy_position(next_x, next_y, 1);
 
+    let moved;
+
     if (diagonal_safe) {
         move_entity(entity, horizontal_direction);
         move_entity(entity, vertical_direction);
+	moved = true;
     } else {
         // Se a diagonal não for segura, tenta os eixos separadamente.
         if (
@@ -374,6 +377,7 @@ function run_pathfinding(entity) {
             can_occupy_position(next_x, entity.y)
         ) {
             move_entity(entity, horizontal_direction);
+	    moved = true;
         }
 
         if (
@@ -381,6 +385,18 @@ function run_pathfinding(entity) {
             can_occupy_position(entity.x, next_y)
         ) {
             move_entity(entity, vertical_direction);
+	    moved = true;
+        }
+    }
+
+    if (entity.entity_type !== 'player' && entity.state) {
+
+	if (!moved) entity.state.action = 'standing';
+
+        if (Math.abs(diff_x) > Math.abs(diff_y) && Math.abs(diff_x) > tolerance) {
+            entity.state.direction = diff_x > 0 ? 'right' : 'left';
+        } else if (Math.abs(diff_y) > tolerance) {
+            entity.state.direction = diff_y > 0 ? 'down' : 'up';
         }
     }
 

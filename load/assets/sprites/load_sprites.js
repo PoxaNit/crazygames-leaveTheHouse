@@ -8,6 +8,7 @@ import chair from './chair/chair.js';
 import door from './door/door.js';
 import bed from './bed/bed.js';
 import stove from './stove/stove.js';
+import amanda from './amanda/amanda.js';
 
 async function load_sprites () {
 
@@ -30,6 +31,8 @@ async function load_sprites () {
     await bed();
 
     await stove();
+
+    await amanda();
 
 }
 

@@ -25,6 +25,7 @@ function start_game () {
       assets: assets,
       map: map_copy,
       player: {
+	entity_type: 'player',
         x: 32 * 3,
         y: 32 * 3,
         width: 32,
@@ -38,6 +39,7 @@ function start_game () {
 	}
       },
       monster: {
+	entity_type: 'not_player',
         x: 32 * 58,
         y: 32 * 16,
         width: 32,
