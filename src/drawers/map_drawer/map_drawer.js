@@ -5,6 +5,9 @@ const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 
 function map_drawer() {
+
+    if (!game_state.map.drawable) return;
+
     const layout = game_state.map.layout;
     const tile_size = game_state.map.tile_size;
 

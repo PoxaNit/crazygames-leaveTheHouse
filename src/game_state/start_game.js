@@ -20,11 +20,14 @@ function start_game () {
 	last_frame_time: performance.now(),
 	delta_time: 0,
 	patrol_timer: 0,
-	last_player_position_timer: 0
+	last_player_position_timer: 0,
+	game_over_timer: 0
       },
       assets: assets,
       map: map_copy,
       player: {
+	moveable: true,
+	drawable: true,
 	entity_type: 'player',
         x: 32 * 3,
         y: 32 * 3,
@@ -39,6 +42,8 @@ function start_game () {
 	}
       },
       monster: {
+	moveable: true,
+	drawable: true,
 	entity_type: 'not_player',
         x: 32 * 58,
         y: 32 * 16,

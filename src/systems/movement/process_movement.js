@@ -3,7 +3,7 @@ import run_pathfinding from './run_pathfinding.js';
 
 function process_movement (entity) {
 
-    if (!entity.target_area || !entity.target_area.active) return;
+    if (!entity.target_area || !entity.target_area.active || !entity.moveable) return;
 
     if (entity.movement_type === 'pathfinding') run_pathfinding(entity);
 

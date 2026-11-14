@@ -5,6 +5,9 @@ const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 
 function monster_drawer() {
+
+    if (!game_state.monster.drawable) return;
+
     const monster = game_state.monster;
     const screen_x = monster.x - camera.x;
     const screen_y = monster.y - camera.y;

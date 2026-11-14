@@ -48,7 +48,23 @@ function monster () {
 
     if (game_state.monster.state.action === 'captured_player') {
 
-	
+	game_state.monster.moveable = false;
+
+	game_state.map.drawable = false;
+
+	game_state.player.drawable = false;
+
+	game_state.player.moveable = false;
+
+	game_message.textContent = 'Game Over!';
+
+
+	game_state.time.game_over_timer += game_state.time.delta_time;
+
+
+        if (game_state.time.game_over_timer >= 2.5) {
+            game_state.game_running = false;
+        }
 
     }
 

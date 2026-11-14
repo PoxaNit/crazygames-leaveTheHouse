@@ -144,7 +144,7 @@ function player () {
 
 
     // moving player
-    if (game_state.player.state.action === 'walking' || game_state.player.state.action === 'running') {
+    if ((game_state.player.state.action === 'walking' || game_state.player.state.action === 'running') && game_state.player.moveable) {
 
 	if (game_state.player.state.directions.includes('left')) move_entity(game_state.player, 'left');
 

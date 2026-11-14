@@ -11,7 +11,8 @@ let sprites = {
   door: null,
   bed: null,
   stove: null,
-  amanda: null
+  amanda: null,
+  player: null
 }
 
 export default sprites;
