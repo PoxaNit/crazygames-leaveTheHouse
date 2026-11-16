@@ -63,7 +63,9 @@ function monster () {
 
 
         if (game_state.time.game_over_timer >= 2.5) {
-            game_state.game_running = false;
+
+	    game_state.match_status = 'menu';
+
         }
 
     }

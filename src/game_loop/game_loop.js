@@ -25,9 +25,17 @@ function game_loop () {
 
     if (game_state.game_running) {
 
-	update_state();
+	if (game_state.match_status === 'menu') {
 
-	draw();
+	}
+
+	else if (game_state.match_status === 'playing') {
+
+	    update_state();
+
+	    draw();
+
+	}
 
     }
 

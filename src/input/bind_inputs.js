@@ -2,7 +2,16 @@ import game_state from '../game_state/game_state.js';
 import start_game from '../game_state/start_game.js';
 import input_state from './input_state/input_state.js';
 
+const btn_play = document.getElementById('btn-play');
+const btn_sound = document.getElementById('btn-sound');
+
 function bind_inputs () {
+
+    btn_play?.addEventListener('click', () => {
+        btn_play.blur();
+	start_game();
+	game_state.match_status = 'playing';
+    });
 
     document.addEventListener('keydown', e => {
 

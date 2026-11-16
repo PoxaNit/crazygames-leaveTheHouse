@@ -1,36 +1,102 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My CrazyGames Prototype</title>
+    <title>Amanda's House</title>
     <style>
-        /* Remove margens e garante que o jogo ocupe a tela inteira de forma limpa */
         body {
             margin: 0;
             padding: 0;
             background-color: #111;
             display: flex;
-            flex-direction: column; /* Alinha o canvas e o texto verticalmente */
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             height: 100vh;
             overflow: hidden;
-            font-family: sans-serif; /* Fonte limpa para a mensagem */
+            font-family: monospace, sans-serif;
         }
 
-        /* Estilização do Canvas do Jogo */
-        #gameCanvas {
-            padding: 0px;
-            background-color: #222;
-            box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.5);
-            /* Define um tamanho padrão responsivo */
+        /* Container holds both the canvas and the overlay menu in exact 16:9 alignment */
+        #game-container {
+            position: relative;
+            width: 960px;
             max-width: 100%;
-            max-height: 80vh; /* Ajustado para sobrar espaço para o texto */
+            max-height: 80vh;
             aspect-ratio: 16 / 9;
+            box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.5);
+            background-color: #222;
         }
 
-        /* Estilização da mensagem do jogo */
+        /* Canvas fills 100% of the container */
+        #gameCanvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+            padding: 0;
+        }
+
+        /* Main menu overlay locked inside the canvas boundaries */
+        #main-menu {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(18, 12, 10, 0.92);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: #ebebeb;
+            z-index: 10;
+            user-select: none;
+        }
+
+        #main-menu h1 {
+            font-size: clamp(24px, 4vw, 44px);
+            margin: 0 0 32px 0;
+            letter-spacing: 3px;
+            color: #ebebeb;
+            text-shadow: 3px 3px 0px #59181b;
+            text-align: center;
+        }
+
+        .menu-btn {
+            padding: 12px 36px;
+            margin: 8px 0;
+            min-width: 180px;
+            font-size: 18px;
+            font-family: monospace, sans-serif;
+            font-weight: bold;
+            background-color: #59181b;
+            color: #ebebeb;
+            border: 2px solid #ebebeb;
+            cursor: pointer;
+            transition: transform 0.1s ease, background-color 0.15s ease;
+        }
+
+        .menu-btn:hover {
+            background-color: #7a2125;
+            transform: scale(1.04);
+        }
+
+        .menu-btn:active {
+            transform: scale(0.98);
+        }
+
+        #btn-sound {
+            background-color: #2c1a04;
+            font-size: 15px;
+            padding: 10px 24px;
+        }
+
+        #btn-sound:hover {
+            background-color: #3a2214;
+        }
+
+        /* Game message below the container */
         #game_message {
             color: #fff;
             font-size: 1.2rem;
@@ -39,17 +105,24 @@
             text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.5);
         }
     </style>
-    <!-- 1. IMPORTAÇÃO DO SDK DA CRAZYGAMES -->
     <script src="https://sdk.crazygames.com/crazygames-sdk-v3.js"></script>
   </head>
 
   <body>
-    <canvas id="gameCanvas" width="960" height="540"></canvas>
-    
-    <!-- Elemento de mensagem adicionado -->
+    <div id="game-container">
+        <canvas id="gameCanvas" width="960" height="540"></canvas>
+
+        <!-- Menu locked inside the canvas area -->
+        <div id="main-menu">
+            <h1>AMANDA'S HOUSE</h1>
+            <button id="btn-play" class="menu-btn">PLAY</button>
+            <button id="btn-sound" class="menu-btn">SOUND: ON</button>
+        </div>
+    </div>
+
     <p id="game_message"></p>
 
-    <script type='module' src='./src/index.js'></script>
+    <script type="module" src="./src/index.js"></script>
   </body>
 </html>
 

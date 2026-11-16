@@ -4,6 +4,7 @@ import keys from './modules/keys.js';
 import creaky_floor from './modules/creaky_floor.js';
 import door from './modules/door.js';
 import patrol_areas from './modules/patrol_areas.js';
+import menu from './modules/menu.js';
 import update_camera from '../../src/systems/camera/update_camera.js';
 
 function update_state () {
@@ -21,6 +22,8 @@ function update_state () {
     player();
 
     update_camera();
+
+    menu();
 
 }
 

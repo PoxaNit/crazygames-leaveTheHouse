@@ -32,9 +32,23 @@ function door () {
 	check_tile_collision(player, 9)
     ) {
 
-	game_state.game_running = false;
+	game_state.time.victory_timer += game_state.time.delta_time;
 
 	game_message.textContent = 'Victory!';
+
+	game_state.player.moveable = false;
+
+	game_state.monster.drawable = false;
+
+	game_state.monster.moveable = false;
+
+	game_state.map.drawable = false;
+
+	if (game_state.time.victory_timer >= 3.0) {
+
+	    game_state.match_status = 'menu';
+
+	}
 
     };
 

@@ -32,11 +32,11 @@ function player_drawer() {
         ? player.state.directions[player.state.directions.length - 1]
         : player.state?.direction;
 
-    if (active_dir) {
+    if (active_dir && player.moveable) {
         last_direction = active_dir;
     }
 
-    // 0: down, 1: up, 2: left, 3: right
+    // 0: down, 1: up, 2: right, 3: left
     let sprite_index = 0;
     if (last_direction === 'down') sprite_index = 0;
     else if (last_direction === 'up') sprite_index = 1;
@@ -45,18 +45,20 @@ function player_drawer() {
 
     const sx = sprite_index * tile_size;
 
-    // Procedural step bounce and tilt for walking and running
+    // Procedural step bounce and tilt only when moveable is true
     let bob_y = 0;
     let tilt_angle = 0;
 
-    if (action === 'walking') {
-        const wave = Math.sin(Date.now() / 110);
-        bob_y = -Math.abs(wave) * 2.5;
-        tilt_angle = wave * 0.05;
-    } else if (action === 'running') {
-        const wave = Math.sin(Date.now() / 65);
-        bob_y = -Math.abs(wave) * 4;
-        tilt_angle = wave * 0.09;
+    if (player.moveable) {
+        if (action === 'walking') {
+            const wave = Math.sin(Date.now() / 110);
+            bob_y = -Math.abs(wave) * 2.5;
+            tilt_angle = wave * 0.05;
+        } else if (action === 'running') {
+            const wave = Math.sin(Date.now() / 65);
+            bob_y = -Math.abs(wave) * 4;
+            tilt_angle = wave * 0.09;
+        }
     }
 
     ctx.save();

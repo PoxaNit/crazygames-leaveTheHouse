@@ -15,13 +15,15 @@ function start_game () {
 
     const standard_game_state = {
       game_running: true,
+      match_status: 'menu', // menu, playing, victory, game over
       solid_tiles: [1, 6, 7, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38], // to define obstacles
       time: {
 	last_frame_time: performance.now(),
 	delta_time: 0,
 	patrol_timer: 0,
 	last_player_position_timer: 0,
-	game_over_timer: 0
+	game_over_timer: 0,
+	victory_timer: 0
       },
       assets: assets,
       map: map_copy,
@@ -33,9 +35,9 @@ function start_game () {
         y: 32 * 3,
         width: 32,
         height: 32,
-	base_velocity: 10,
-        velocity: 10,
-	running_velocity: 4,
+	base_velocity: 1.5,
+        velocity: 1.5,
+	running_velocity: 10,
 	state: {
 	  action: 'standing',
 	  directions: []
