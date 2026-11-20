@@ -48,6 +48,8 @@ function monster () {
 
     if (game_state.monster.state.action === 'captured_player') {
 
+	game_state.match_status = 'game over';
+
 	game_state.monster.moveable = false;
 
 	game_state.map.drawable = false;

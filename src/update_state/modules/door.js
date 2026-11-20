@@ -34,6 +34,8 @@ function door () {
 
 	game_state.time.victory_timer += game_state.time.delta_time;
 
+	game_state.match_status = 'victory';
+
 	game_message.textContent = 'Victory!';
 
 	game_state.player.moveable = false;

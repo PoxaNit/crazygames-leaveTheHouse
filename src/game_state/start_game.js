@@ -9,11 +9,14 @@ const canvas = document.getElementById('gameCanvas');
 
 function start_game () {
 
+    const keep_muted = Boolean(game_state.audio_muted);
+
     game_message.textContent = '';
 
     const map_copy = structuredClone(map);
 
     const standard_game_state = {
+      audio_muted: game_state?.keep_muted,
       game_running: true,
       match_status: 'menu', // menu, playing, victory, game over
       solid_tiles: [1, 6, 7, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38], // to define obstacles
@@ -23,7 +26,8 @@ function start_game () {
 	patrol_timer: 0,
 	last_player_position_timer: 0,
 	game_over_timer: 0,
-	victory_timer: 0
+	victory_timer: 0,
+	creaky_wood_timer: 0
       },
       assets: assets,
       map: map_copy,

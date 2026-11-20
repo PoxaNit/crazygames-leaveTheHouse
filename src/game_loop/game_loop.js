@@ -1,5 +1,6 @@
 import update_state from '../update_state/update_state.js';
 import draw from '../drawers/draw.js';
+import play from '../sound_players/play.js';
 import game_state from '../game_state/game_state.js';
 
 const canvas = document.getElementById('gameCanvas');
@@ -29,11 +30,13 @@ function game_loop () {
 
 	}
 
-	else if (game_state.match_status === 'playing') {
+	else if (game_state.match_status === 'playing' || game_state.match_status === 'victory' || game_state.match_status === 'game over') {
 
 	    update_state();
 
 	    draw();
+
+	    play();
 
 	}
 
